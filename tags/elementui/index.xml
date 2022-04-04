@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ElementUI on AuuuNya Blog</title>
+    <link>https://zyy.im/tags/elementui/</link>
+    <description>Recent content in ElementUI on AuuuNya Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>AuuuNya</copyright>
+    <lastBuildDate>Tue, 21 May 2019 22:45:12 +0800</lastBuildDate><atom:link href="https://zyy.im/tags/elementui/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Element UI修改默认样式</title>
+      <link>https://zyy.im/posts/element-ui%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/</link>
+      <pubDate>Tue, 21 May 2019 22:45:12 +0800</pubDate>
+      
+      <guid>https://zyy.im/posts/element-ui%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/</guid>
+      <description>&lt;p&gt;最新在修改一个用户中心，前台是用Vue+Nuxt+ElementUI写的，在修改过程中发现不管样式怎么写，加父标签，elementui加载都会使用它自己的样式，于是看了看代码，
+在这里记录下我是怎么修改它的默认样式的。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

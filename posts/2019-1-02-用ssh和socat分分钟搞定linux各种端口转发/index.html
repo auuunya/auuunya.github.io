@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> 用ssh和socat分分钟搞定Linux各种端口转发 | AuuuNya Blog</title>
+  <link rel = 'canonical' href = 'https://zyy.im/posts/2019-1-02-%E7%94%A8ssh%E5%92%8Csocat%E5%88%86%E5%88%86%E9%92%9F%E6%90%9E%E5%AE%9Alinux%E5%90%84%E7%A7%8D%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/'>
+  <meta name="description" content="只会写Hello,World的菜鸟">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="用ssh和socat分分钟搞定Linux各种端口转发" />
+<meta property="og:description" content="小明写了一个Web服务，监听hosta上8080端口，小王现在想访问这个服务，有没有快速的方法?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zyy.im/posts/2019-1-02-%E7%94%A8ssh%E5%92%8Csocat%E5%88%86%E5%88%86%E9%92%9F%E6%90%9E%E5%AE%9Alinux%E5%90%84%E7%A7%8D%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-01-02T13:00:50+08:00" />
+<meta property="article:modified_time" content="2019-01-02T13:00:50+08:00" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用ssh和socat分分钟搞定Linux各种端口转发"/>
+<meta name="twitter:description" content="小明写了一个Web服务，监听hosta上8080端口，小王现在想访问这个服务，有没有快速的方法?"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://zyy.im/css/styles.832f844a18081a513455a3bf961dde17b5478d975436c578c9c3cfda4f77c0d89a107619cbe6687e0bf8b145f6590245d268ef2fc6bbd5c89685defaaf00ead0.css" integrity="sha512-gy&#43;EShgIGlE0VaO/lh3eF7VHjZdUNsV4ycPP2k93wNiaEHYZy&#43;Zofgv4sUX2WQJF0mjvL8a71ciWhd76rwDq0A=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://zyy.im/images/favicon.ico" />
+
+  
+  
+  
+  
+</head>
+
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/posts">All Posts</a></li>
+         
+        <li><a href="/about">About</a></li>
+         
+        <li><a href="/tags">Tags</a></li>
+         
+        <li><a href="/link">Links</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://zyy.im/posts/2018-06-09-%E7%94%A8go%E7%BC%96%E5%86%99%E5%B0%81%E8%A3%85%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://zyy.im/posts/element-ui%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&text=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&is_video=false&description=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91&body=Check out this article: https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&name=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91&description=%3cp%3e%e5%b0%8f%e6%98%8e%e5%86%99%e4%ba%86%e4%b8%80%e4%b8%aaWeb%e6%9c%8d%e5%8a%a1%ef%bc%8c%e7%9b%91%e5%90%achosta%e4%b8%8a8080%e7%ab%af%e5%8f%a3%ef%bc%8c%e5%b0%8f%e7%8e%8b%e7%8e%b0%e5%9c%a8%e6%83%b3%e8%ae%bf%e9%97%ae%e8%bf%99%e4%b8%aa%e6%9c%8d%e5%8a%a1%ef%bc%8c%e6%9c%89%e6%b2%a1%e6%9c%89%e5%bf%ab%e9%80%9f%e7%9a%84%e6%96%b9%e6%b3%95%3f%3c%2fp%3e" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&t=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents"></nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        用ssh和socat分分钟搞定Linux各种端口转发
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2019-01-02 13:00:50 &#43;0800 CST" itemprop="datePublished">2019-01-02</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          3 minute read
+        </div>
+        
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/linux" rel="tag">linux</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ssh" rel="tag">SSH</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>小明写了一个Web服务，监听hosta上8080端口，小王现在想访问这个服务，有没有快速的方法?</p>
+<p><img src="http://ygjs-static-hz.oss-cn-beijing.aliyuncs.com/images/2018-1-17/4.jpg" alt="img"></p>
+<p>其实很简单，小明只需要做这两件事情：</p>
+<p>申请一台带公网IP的公有云服务器<code>hostb</code>，我们假设ip地址是<code>12.34.56.78</code>
+在hosta上执行下面的命令，它会建立一个从hosta到hostb的ssh会话，同时将8080端口映射到hostb的1080端口。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span>ssh -R 1080:localhost:8080 root@12.34.56.78
+</code></pre></div><p>这样，小王就可以愉快的用<code>http://12.34.66.78:1080</code>访问小明的服务了。</p>
+<p>远程Unix Socket映射
+除了将我们本地服务通过端口映射提供给其它人访问，我们还可以通过端口转发玩一些更high的。比如下面这条命令，它把监听在远程主机12.34.56.78上的mysql服务unix socket映射到本地的/var/run/mysqld.temp.sock，这样，小明就可以用mysql -S /var/run/mysqld/mysqld.temp.sock来访问远程主机的mysql服务了。</p>
+<pre tabindex="0"><code>socat &quot;UNIX-LISTEN:/var/run/mysqld.temp.sock,reuseaddr,fork&quot; EXEC:&quot;ssh root@12.34.56.78 socat STDIO UNIX-CONNECT:/var/run/mysqld/mysqld.sock&quot;
+</code></pre><p>当然，小明如果不喜欢本地unix socket，他还可以用下面的命令把<code>12.34.56.78</code>上的mysql映射到本地的5500端口，然后使用<code>mysql -p 5500</code>命令访问。</p>
+<pre tabindex="0"><code>socat TCP-LISTEN:5500 EXEC:'ssh root@12.34.56.78 &quot;socat STDIO UNIX-CONNECT:/var/run/mysqld/mysqld.sock&quot;'
+</code></pre><p>UDP也不在话下，比如下面这条命令可以把12.34.56.78的udp 161端口映射到本地的1611端口：</p>
+<pre tabindex="0"><code>socat udp-listen:1611 system:'ssh root@12.34.56.78 &quot;socat stdio udp-connect:remotetarget:161&quot;'
+</code></pre>
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/posts">All Posts</a></li>
+         
+          <li><a href="/about">About</a></li>
+         
+          <li><a href="/tags">Tags</a></li>
+         
+          <li><a href="/link">Links</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents"></nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&text=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&is_video=false&description=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91&body=Check out this article: https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&title=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&name=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91&description=%3cp%3e%e5%b0%8f%e6%98%8e%e5%86%99%e4%ba%86%e4%b8%80%e4%b8%aaWeb%e6%9c%8d%e5%8a%a1%ef%bc%8c%e7%9b%91%e5%90%achosta%e4%b8%8a8080%e7%ab%af%e5%8f%a3%ef%bc%8c%e5%b0%8f%e7%8e%8b%e7%8e%b0%e5%9c%a8%e6%83%b3%e8%ae%bf%e9%97%ae%e8%bf%99%e4%b8%aa%e6%9c%8d%e5%8a%a1%ef%bc%8c%e6%9c%89%e6%b2%a1%e6%9c%89%e5%bf%ab%e9%80%9f%e7%9a%84%e6%96%b9%e6%b3%95%3f%3c%2fp%3e" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fzyy.im%2fposts%2f2019-1-02-%25E7%2594%25A8ssh%25E5%2592%258Csocat%25E5%2588%2586%25E5%2588%2586%25E9%2592%259F%25E6%2590%259E%25E5%25AE%259Alinux%25E5%2590%2584%25E7%25A7%258D%25E7%25AB%25AF%25E5%258F%25A3%25E8%25BD%25AC%25E5%258F%2591%2f&t=%e7%94%a8ssh%e5%92%8csocat%e5%88%86%e5%88%86%e9%92%9f%e6%90%9e%e5%ae%9aLinux%e5%90%84%e7%a7%8d%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2022  AuuuNya 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/posts">All Posts</a></li>
+         
+        <li><a href="/about">About</a></li>
+         
+        <li><a href="/tags">Tags</a></li>
+         
+        <li><a href="/link">Links</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+<script src=/js/code-copy.js></script>
+
+
+
+  
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</html>

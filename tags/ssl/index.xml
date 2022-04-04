@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SSL on AuuuNya Blog</title>
+    <link>https://zyy.im/tags/ssl/</link>
+    <description>Recent content in SSL on AuuuNya Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>AuuuNya</copyright>
+    <lastBuildDate>Sun, 11 Feb 2018 12:08:36 +0800</lastBuildDate><atom:link href="https://zyy.im/tags/ssl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nginx部署Let&#39;s Encrypt免费SSL证书踩过的坑</title>
+      <link>https://zyy.im/posts/2018-2-11-nginx%E9%83%A8%E7%BD%B2lets-encrypt%E5%85%8D%E8%B4%B9ssl%E8%AF%81%E4%B9%A6%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</link>
+      <pubDate>Sun, 11 Feb 2018 12:08:36 +0800</pubDate>
+      
+      <guid>https://zyy.im/posts/2018-2-11-nginx%E9%83%A8%E7%BD%B2lets-encrypt%E5%85%8D%E8%B4%B9ssl%E8%AF%81%E4%B9%A6%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on AuuuNya Blog</title>
+    <link>https://zyy.im/categories/</link>
+    <description>Recent content in Categories on AuuuNya Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>AuuuNya</copyright>
+    <lastBuildDate>Fri, 12 Jan 2018 15:05:36 +0800</lastBuildDate><atom:link href="https://zyy.im/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pyhton</title>
+      <link>https://zyy.im/categories/pyhton/</link>
+      <pubDate>Fri, 12 Jan 2018 15:05:36 +0800</pubDate>
+      
+      <guid>https://zyy.im/categories/pyhton/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
