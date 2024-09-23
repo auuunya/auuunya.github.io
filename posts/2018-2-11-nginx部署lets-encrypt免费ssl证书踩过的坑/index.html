@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <title>Nginx部署Let&#39;s Encrypt免费SSL证书踩过的坑 | AuuuNya Blog</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="">
+<meta name="generator" content="Hugo 0.129.0">
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>首页</a>
+	
+	<a href="/posts">归档</a>
+	<a href="/tags">标签</a>
+	<a href="/about">关于</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Nginx部署Let&#39;s Encrypt免费SSL证书踩过的坑</h1>
+
+    <div class="tip">
+        <time datetime="2018-02-11 12:08:36 &#43;0800 CST">2018年02月11日</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          178字
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1分钟
+        </span>
+    </div>
+
+    
+    
+
+
+    <div class="content">
+      <h3 id="申请lets-encrypt永久免费ssl证书">申请Let&rsquo;s Encrypt永久免费SSL证书 <a href="#%e7%94%b3%e8%af%b7lets-encrypt%e6%b0%b8%e4%b9%85%e5%85%8d%e8%b4%b9ssl%e8%af%81%e4%b9%a6" class="anchor">🔗</a></h3><h4 id="lets-encrypt简介">Let&rsquo;s Encrypt简介 <a href="#lets-encrypt%e7%ae%80%e4%bb%8b" class="anchor">🔗</a></h4><p><a href="https://link.jianshu.com?t=https%3A%2F%2Fletsencrypt.org%2F" target="_blank" rel="noopener">Let&rsquo;s Encrypt</a>公共且免费SSL的项目</p>
+<p><a href="https://link.jianshu.com?t=https%3A%2F%2Fletsencrypt.org%2F" target="_blank" rel="noopener">Let&rsquo;s Encrypt免费SSL</a>支持包括FireFox、Chrome在内的主流浏览器的兼容和支持，虽然目前是公测阶段，但是也有不少的用户在自有网站项目中正式使用起来。</p>
+<h4 id="步骤如下">步骤如下： <a href="#%e6%ad%a5%e9%aa%a4%e5%a6%82%e4%b8%8b" class="anchor">🔗</a></h4><p><strong>第一、安装Let&rsquo;s Encrypt前的准备工作</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#6272a4">#检查系统是否安装git</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>git  --version 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#6272a4">#git 安装</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>yum install git
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#6272a4">#查看python版本,尽量保证在2.7以上</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span>python -v 
+</span></span></code></pre></div><p><strong>第二、获取Let&rsquo;s Encrypt免费SSL证书</strong>
+//当时配置的时候,碰到好多错误,还好网上都有了解决办法,大家出错的时候可以看看letsencrypt下面的日志,里面报错内容都有,把错误尽量都解决了,再安装,不然错一次申请一次证书,次数用完,就要在等一周才能申请了.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#6272a4">#获取letsencrypt</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>git clone https://github.com/letsencrypt/letsencrypt
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#6272a4">#进入letsencrypt目录</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#8be9fd;font-style:italic">cd</span> letsencrypt
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#6272a4">#生成证书1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>//可以填两个域名，也可以填一个
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>./letsencrypt-auto certonly --standalone --email your_email@address -d your_url_address -d www.your_url_address
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span><span style="color:#6272a4">#生成证书2</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>//我一般用这个
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>./letsencrypt-auto
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>1. 填入邮箱地址
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>2. 选择A
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>3. 选择Y
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>4. 填入域名地址    //多域名用空格或者/或者,隔开
+</span></span></code></pre></div><p><strong>第三、Let&rsquo;s Encrypt免费SSL证书获取与应用</strong></p>
+<p>在完成Let&rsquo;s Encrypt证书的生成之后，我们会在&quot;/etc/letsencrypt/live/your_url_address/&ldquo;域名目录下有4个文件就是生成的密钥证书文件。</p>
+<p>cert.pem - Apache服务器端证书
+chain.pem - Apache根证书和中继证书
+fullchain.pem - Nginx所需要ssl_certificate文件
+privkey.pem - 安全证书KEY文件</p>
+<p>如果我们使用的Nginx环境，那就需要用到fullchain.pem和privkey.pem两个证书文件，在部署Nginx的时候需要用到。在Nginx环境中，只要将对应的ssl_certificate和ssl_certificate_key路径设置成我们生成的2个文件就可以。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#6272a4">#打开linux配置文件，找到HTTPS 443端口配置的server,如果有以下文件就不需要再添加了，没有的话就添加上</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span> ssl_certificate /etc/letsencrypt/live/your_url_address/fullchain.pem;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span> ssl_certificate_key /etc/letsencrypt/live/your_url_address/privkey.pem;
+</span></span></code></pre></div><p><strong>第四、解决Let&rsquo;s Encrypt免费SSL证书有效期问题</strong></p>
+<p>Let&rsquo;s Encrypt证书是有效期90天的，需要我们自己手工更新续期才可以。
+手工续期命令如下：_</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>./letsencrypt-auto certonly --renew-by-default --email your_email@address -d your_url_address -d www.your_url_address
+</span></span></code></pre></div><p>这样我们就可以续期,当然我们也可以写一个<code>cron</code>脚本让他自动续期</p>
+<h3 id="从证书中删除域名">从证书中删除域名 <a href="#%e4%bb%8e%e8%af%81%e4%b9%a6%e4%b8%ad%e5%88%a0%e9%99%a4%e5%9f%9f%e5%90%8d" class="anchor">🔗</a></h3><p>Let’s Encrypt目前并不提供从证书中删除域名的功能,所以我们只是把证书删除后重新申请.</p>
+<blockquote>
+<p>证书每周申请数量有限,不要一直删了申请</p>
+</blockquote>
+<p>删除证书的时候，需要删除archive中的文件和live中的符号链接，同时还需要删除证书更新的配置文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>rm -rf /etc/letsencrypt/live/www.example.com/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>rm -rf /etc/letsencrypt/archive/www.example.com/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>rm /etc/letsencrypt/renewal/www.example.com.conf
+</span></span></code></pre></div><p>删除后，重新申请证书，这里给出的是webroot方式，当然你也可以用上面的方法:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>letsencrypt certonly --webroot -w /var/www/example -d your_url_address -d www.your_url_address
+</span></span></code></pre></div><h1 id="自动续期脚本">自动续期脚本 <a href="#%e8%87%aa%e5%8a%a8%e7%bb%ad%e6%9c%9f%e8%84%9a%e6%9c%ac" class="anchor">🔗</a></h1><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>//这个脚本放在和let<span style="color:#f1fa8c">&#39;s encrypt目录同级的目录下
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#f1fa8c">#!/bin/sh
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#f1fa8c"># This script renews all the Let&#39;</span>s Encrypt certificates with a validity &lt; <span style="color:#bd93f9">30</span> days
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#ff79c6">if</span> ! /opt/letsencrypt/letsencrypt-auto renew &gt; /var/log/letsencrypt/renew.log 2&gt;&amp;<span style="color:#bd93f9">1</span> ; <span style="color:#ff79c6">then</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span>    <span style="color:#8be9fd;font-style:italic">echo</span> Automated renewal failed:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span>    cat /var/log/letsencrypt/renew.log
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8</span><span>    <span style="color:#8be9fd;font-style:italic">exit</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9</span><span><span style="color:#ff79c6">fi</span>
+</span></span></code></pre></div><p><strong>权限</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>chmod +x renewCerts.sh
+</span></span></code></pre></div><p><strong>cron脚本</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>//每个月凌晨1点运行
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bd93f9">0</span> <span style="color:#bd93f9">0</span> <span style="color:#bd93f9">1</span> * * /bin/sh /opt/renewCerts.sh
+</span></span></code></pre></div><h1 id="坑">坑： <a href="#%e5%9d%91" class="anchor">🔗</a></h1><ul>
+<li>每周申请次数有限</li>
+<li>国内服务器要放行443端口,然后重启服务器,不然访问不到,(当时国外两个服务器很快就配置好了,国内服务器一直出错出错,后来问了几个表哥,原来是阿里云要放行一下443端口.)</li>
+<li>如果用以上第二种方法申请,nginx服务器默认的配置在删除证书文件后还存在.</li>
+</ul>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://blog.auuu.me/tags/ssl">SSL</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2024 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <title>Golang基础学习整理 | AuuuNya Blog</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="">
+<meta name="generator" content="Hugo 0.129.0">
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>首页</a>
+	
+	<a href="/posts">归档</a>
+	<a href="/tags">标签</a>
+	<a href="/about">关于</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Golang基础学习整理</h1>
+
+    <div class="tip">
+        <time datetime="2018-02-28 13:20:36 &#43;0800 CST">2018年02月28日</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          210字
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1分钟
+        </span>
+    </div>
+
+    
+    
+
+
+    <div class="content">
+      <ol>
+<li><code>iota</code> iota是golang的一个关键字，此关键字用来声明enum的时候采用，默认从0开始，每遇到一个类似const就会重置为0。</li>
+<li>通过开头字母大小写来实现变量和函数的公有私有。例:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#6272a4">//公有
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">var</span> Name <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#6272a4">//私有
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">var</span> name <span style="color:#8be9fd">string</span>
+</span></span></code></pre></div><ol start="3">
+<li>将数组作为函数参数进行传递时，实际传入的是该数组的副本。</li>
+<li>由于初始化数组时无法预知定义多大的空间，就需要使用类似动态数组的结构，go语言中采用<code>slice</code>来实现数组的切片，类似<strong>python</strong>中的切片，
+<code>slice</code>是一个引用类型，它总是指向一个底层的<strong>array</strong>，<code>slice</code>的声明类似<strong>array</strong>，只是不需要长度。当引用改变其中的元素时，其他所有的引用也会相应改变。
+常用内置函数: <strong>len</strong>获取长度，<strong>cap</strong>获取容量，<strong>append</strong>追加元素，并返回一个和<code>slice</code>一样类型的<code>slice</code>，<strong>copy</strong>函数从源<code>slice</code>的<strong>src</strong>中复制元素到目标dst，并且返回复制的元素个数。</li>
+<li>map类似python中的字典，格式为map[keyType]valueType。map无序，必须通过key去获取。长度不固定，是一种引用类型。len函数
+map不是安全的，在多个goroutine中使用时必须使用mutex lock</li>
+<li>make用于内建类型（map，slice，channel）的内存分配。new用于各种类型的内存分配。</li>
+<li>go中<code>switch</code>默认相当于每个<code>case</code>后面都加了<code>break</code>。但是可以通过加<code>fallthrough</code>强制执行后后面的代码。</li>
+<li><code>main</code>函数和<code>init</code>函数，在定义时不能有任何参数和返回值。</li>
+<li>导入包时加前缀_是为了引入该包，而不直接使用包里面的函数，只是调用包中的init函数。</li>
+<li><code>interface</code>是一组method签名的集合，可以通过<code>interface</code>来定义对象的一组行为。若某个对象实现了某个接口的所有方法，那么这个对象就实现了此接口。如果定义一个interface的变量，那么这个变量里面可以存实现这个interface的任意类型的对象。空interface可以存储任何类型的数值。
+element.(type)只能在switch中使用，其他地方不能使用。</li>
+<li>golang中的反射机制，就是能够检查程序在运行时的状态。</li>
+</ol>
+<h3 id="函数声明">函数声明 <a href="#%e5%87%bd%e6%95%b0%e5%a3%b0%e6%98%8e" class="anchor">🔗</a></h3><p>func 函数名(参数列表)(返回值列表){
+//函数体
+}</p>
+<h5 id="变量声明">变量声明 <a href="#%e5%8f%98%e9%87%8f%e5%a3%b0%e6%98%8e" class="anchor">🔗</a></h5><ul>
+<li>var 变量名 类型 = 表达式(类型和表达式可以省略其中一个)</li>
+<li>多个变量声明:
+var (
+变量名 类型
+变量名 类型
+)</li>
+</ul>
+<h5 id="赋值">赋值 <a href="#%e8%b5%8b%e5%80%bc" class="anchor">🔗</a></h5><p>变量 = 表达式
+<code>_</code>可以丢弃不需要的值</p>
+<h5 id="常量">常量 <a href="#%e5%b8%b8%e9%87%8f" class="anchor">🔗</a></h5><p>const 常量名 = 表达式
+const(
+常量名 类型
+常量名 类型
+)
+批量声明的常量，除第一个外其它的常量的右边的初始化表达式都可以省略，默认使用前面常量的初始化表达式写法
+<code>iota</code>常用语定义枚举值</p>
+<blockquote>
+<p>总结:var 声明变量，const声明常量。声明时可以带类型。也可以不带类型，通过右推断.</p>
+</blockquote>
+<h5 id="位运算">位运算 <a href="#%e4%bd%8d%e8%bf%90%e7%ae%97" class="anchor">🔗</a></h5><ul>
+<li><code>&amp;</code> 位与and (左侧和右侧都为1，则为1；否则为0)</li>
+<li><code>|</code> 位或 or(左侧或右侧只要有一个为1，结果为1；都为0结果才为0)</li>
+<li><code>^</code> 位异或 xor (相同为0，不同为1)</li>
+<li><code>&amp;^</code> 位清空and not(右侧是0，左侧数不变;右侧是1，则左侧数清零)</li>
+<li><code>&lt;&lt;</code> 左移</li>
+<li><code>&gt;&gt;</code> 右移</li>
+</ul>
+<h5 id="指针">指针 <a href="#%e6%8c%87%e9%92%88" class="anchor">🔗</a></h5><p>var 变量名 <code>*类型</code></p>
+<pre tabindex="0"><code>eg:var ptr [MAX]*int    //指向数组的指针
+/*
+默认值 nil,没有NULL值
+&#34;&amp;&#34;取变量地址,“*”通过指针访问目标对象
+不能对指针做加减乘除运算
+不存在函数的指针
+*/
+var ptr *[3]int      //数组指针,保存了一个数组地址
+var ptr [3]*int      //指针数组,每元素都是指针
+</code></pre><h5 id="type自定义类型">type自定义类型 <a href="#type%e8%87%aa%e5%ae%9a%e4%b9%89%e7%b1%bb%e5%9e%8b" class="anchor">🔗</a></h5><p>type 类型名字 底层类型</p>
+<h5 id="switch">Switch <a href="#switch" class="anchor">🔗</a></h5><p>只有在case中明确添加<strong>fallthrough</strong>关键字，才会继续执行下一个case
+不带条件表达式的<code>Switch</code>与<strong>if&hellip;else</strong>相同，遇到<code>false</code>停止</p>
+<h5 id="数组">数组 <a href="#%e6%95%b0%e7%bb%84" class="anchor">🔗</a></h5><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#8be9fd;font-style:italic">var</span> 数组名 [长度]类型
+</span></span></code></pre></div><h6 id="数组切片">数组切片 <a href="#%e6%95%b0%e7%bb%84%e5%88%87%e7%89%87" class="anchor">🔗</a></h6><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#8be9fd;font-style:italic">var</span> 数组切片 []类型      <span style="color:#6272a4">//声明无需定义长度
+</span></span></span></code></pre></div><p>直接创建切片</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#8be9fd;font-style:italic">make</span>([]Type,len[,cap])
+</span></span></code></pre></div><p>切片可遍历，可修改，不可比较</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>slice.<span style="color:#8be9fd;font-style:italic">copy</span>(slice1,slice2)    <span style="color:#6272a4">//slice2赋值给slice1
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#6272a4"></span><span style="color:#f1fa8c">```go
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#f1fa8c">  包       功能
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#f1fa8c">`</span>strings<span style="color:#f1fa8c">`  提供了字符串查询、替换、比较、截断、拆分和合并等功能。
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#f1fa8c">`</span>bytes<span style="color:#f1fa8c">`    提供了很多与strings包类似的功能。因为字符串是只读的，逐步构建字符串会导致很多分配和复制，这种情况下，使用bytes.Buffer类型将会更有效。
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#f1fa8c">`</span>strconv<span style="color:#f1fa8c">`  提供了布尔类型、整数、浮点数和对应字符串的相互转换，还提供了双引号转义相关的转换。
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span><span style="color:#f1fa8c">`</span>unicode<span style="color:#f1fa8c">`  提供了IsDigit、IsLetter、IsUpper和IsLower等功能，用于给字符分类。
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span><span style="color:#f1fa8c">##### 映射
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span><span style="color:#f1fa8c">声明:var 映射名称 map[键]值
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span><span style="color:#f1fa8c">只是声明一个map，它的初始值是nil，也就是没有引用任何哈希表。所以不能向一个nil值的map存入元素
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span><span style="color:#f1fa8c">创建:
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span><span style="color:#f1fa8c">```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span><span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span><span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>,<span style="color:#bd93f9">100</span>)  <span style="color:#6272a4">//初始存储能力100
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>{<span style="color:#f1fa8c">&#34;key&#34;</span>:value,<span style="color:#f1fa8c">&#34;key&#34;</span>:value})
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span><span style="color:#6272a4">//添加
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span><span style="color:#6272a4"></span>Map[<span style="color:#f1fa8c">&#34;key&#34;</span>]=value
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span><span style="color:#6272a4">//删除
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">delete</span>(<span style="color:#8be9fd;font-style:italic">map</span>,<span style="color:#f1fa8c">&#34;key&#34;</span>)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span><span style="color:#6272a4">//查看是否存在此key
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span><span style="color:#6272a4"></span><span style="color:#ff79c6">if</span> v,ok <span style="color:#ff79c6">:=</span> Map[key];!ok{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>not key
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>}
+</span></span></code></pre></div><h5 id="函数">函数 <a href="#%e5%87%bd%e6%95%b0" class="anchor">🔗</a></h5><p>func 函数名([形参列表])[返回值列表]{
+//函数体
+}</p>
+<h6 id="可变参数">可变参数 <a href="#%e5%8f%af%e5%8f%98%e5%8f%82%e6%95%b0" class="anchor">🔗</a></h6><p>可接收任意数量的该类型参数
+func Sum(vals &hellip;int)int{
+//函数体
+}</p>
+<h6 id="错误处理">错误处理 <a href="#%e9%94%99%e8%af%af%e5%a4%84%e7%90%86" class="anchor">🔗</a></h6><p>func Foo(参数列表)(res list,err error){
+//&hellip;
+}
+<code>defer</code>通常用于 <strong>open/close</strong>, <strong>connect/disconnect</strong>, <strong>lock/unlock</strong> 等这些成对的操作, 来保证在任何情况下资源都被正确释放</p>
+<h5 id="结构体">结构体 <a href="#%e7%bb%93%e6%9e%84%e4%bd%93" class="anchor">🔗</a></h5><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#8be9fd;font-style:italic">type</span> 类型名称 <span style="color:#8be9fd;font-style:italic">struct</span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#6272a4">//成员列表
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#6272a4"></span>}
+</span></span></code></pre></div><h6 id="方法">方法 <a href="#%e6%96%b9%e6%b3%95" class="anchor">🔗</a></h6><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#8be9fd;font-style:italic">func</span>  (变量名 类型)方法名称( [形参列表] ) [返回值列表]{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>  <span style="color:#6272a4">// 方法体
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#6272a4"></span>}
+</span></span></code></pre></div><h6 id="接口-interface">接口 <code>interface</code> <a href="#%e6%8e%a5%e5%8f%a3-interface" class="anchor">🔗</a></h6><p>一个类型如果拥有一个接口需要的所有方法，那么这个类型就实现了这个接口。</p>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://blog.auuu.me/tags/golang">golang</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2024 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

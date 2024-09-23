@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <title>Git永久删除库中的文件 | AuuuNya Blog</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="如果使用git不小心提交了一个类似debug或者.swp的临时文件，即使用git rm删除，只会向版本库中新增一条删除记录，之前提交的文件物理上还保存在版本库中，每次用git clone的时候都会下载，时间久了，这样的文件多了，就会使得整个版本库庞大无比,所以需要找到将这些文件从版本库中物理删除的办法。">
+<meta name="generator" content="Hugo 0.129.0">
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>首页</a>
+	
+	<a href="/posts">归档</a>
+	<a href="/tags">标签</a>
+	<a href="/about">关于</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Git永久删除库中的文件</h1>
+
+    <div class="tip">
+        <time datetime="2018-03-24 13:50:33 &#43;0800 CST">2018年03月24日</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          100字
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1分钟
+        </span>
+    </div>
+
+    
+    
+
+
+    <div class="content">
+      <p>如果使用git不小心提交了一个类似debug或者.swp的临时文件，即使用<code>git rm</code>删除，只会向版本库中新增一条删除记录，之前提交的文件物理上还保存在版本库中，每次用<code>git clone</code>的时候都会下载，时间久了，这样的文件多了，就会使得整个版本库庞大无比,所以需要找到将这些文件从版本库中物理删除的办法。</p>
+<h3 id="解决办法">解决办法 <a href="#%e8%a7%a3%e5%86%b3%e5%8a%9e%e6%b3%95" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#6272a4">#1. 确定文件从哪个commit引入的</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>git log --pretty<span style="color:#ff79c6">=</span>oneline --branches -- bigfile
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#6272a4">#2. 让git重写每一个分支, 删除bigfile</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>git filter-branch --force --index-filter <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#f1fa8c"></span><span style="color:#f1fa8c">&#34;git rm --cached --ignore-unmatch BIGFILE&#34;</span> | <span style="color:#f1fa8c">&#34;git rm -r --cached --ignore-unmatch BIGDIR&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span><span style="color:#f1fa8c"></span>--prune-empty --tag-name-filter cat -- --all
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span><span style="color:#6272a4">#3. 推送修改</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>git push --all --force
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span><span style="color:#6272a4"># 清除本地的git内存与记录等</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>git <span style="color:#ff79c6">for</span>-each-ref --format<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;delete %(refname)&#39;</span> refs/original
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>git <span style="color:#ff79c6">for</span>-each-ref --format<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;delete %(refname)&#39;</span> refs/original | git update-ref --stdin
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>git reflog expire --expire<span style="color:#ff79c6">=</span>now --all
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>git gc --prune<span style="color:#ff79c6">=</span>now
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>git push origin --force --all
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>git push origin --force --tags
+</span></span></code></pre></div><h3 id="参数说明">参数说明 <a href="#%e5%8f%82%e6%95%b0%e8%af%b4%e6%98%8e" class="anchor">🔗</a></h3><p><code>filter-branch</code> 是让git重写每一个分支，</p>
+<p><code>--force</code> 假如遇到冲突也让git强制执行， <code>--index-filter</code> 选项指定重写的时候应该执行什么命令，要执行的命令紧跟在它的后面，在这里就是<code>git rm --cached --ignore-unmatch bigfile</code> ，让git删除掉缓存的文件，如果有匹配的话。</p>
+<p><code>--prune-empty</code> 选项告诉git，如果因为重写导致某些<strong>commit</strong>变成了空（比如修改的文件全部被删除），那么忽略掉这个commit。</p>
+<p><code>--tag-name-filter</code> 表示对每一个tag如何重命名，重命名的命令紧跟在后面，当前的tag名会从标注输入送给后面的命令，用cat就表示保持tag名不变。</p>
+<p>紧跟着的<code>--</code> 表示分割符，最后的<code>--all</code> 表示对所有的文件都考虑在内。</p>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://blog.auuu.me/tags/git">git</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2024 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

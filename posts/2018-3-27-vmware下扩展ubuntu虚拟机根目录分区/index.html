@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <title>VMware下扩展ubuntu虚拟机根目录分区 | AuuuNya Blog</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="涉及到磁盘分区表删除，最好先备份整个虚拟机！
+原文链接：http://t.cn/RzCP9E2
+作者输入命令时都用“sudo bash”，用sudo或者su就可以了。
+涉及到磁盘分区表删除，最好先备份整个虚拟机！">
+<meta name="generator" content="Hugo 0.129.0">
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>首页</a>
+	
+	<a href="/posts">归档</a>
+	<a href="/tags">标签</a>
+	<a href="/about">关于</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">VMware下扩展ubuntu虚拟机根目录分区</h1>
+
+    <div class="tip">
+        <time datetime="2018-03-27 15:11:36 &#43;0800 CST">2018年03月27日</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          896字
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          5分钟
+        </span>
+    </div>
+
+    
+    
+
+
+    <div class="content">
+      <p>涉及到磁盘分区表删除，最好先备份整个虚拟机！</p>
+<p><strong>原文链接</strong>：<a href="http://t.cn/RzCP9E2" target="_blank" rel="noopener">http://t.cn/RzCP9E2</a>
+作者输入命令时都用“sudo bash”，用sudo或者su就可以了。
+涉及到磁盘分区表删除，最好先备份整个虚拟机！</p>
+<hr>
+<p><strong>原文链接</strong>：<a href="http://t.cn/RzCP9E2" target="_blank" rel="noopener">http://t.cn/RzCP9E2</a>
+作者输入命令时都用“sudo bash”，用sudo或者su就可以了。</p>
+<h3 id="检查文件系统">检查文件系统： <a href="#%e6%a3%80%e6%9f%a5%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>cruz@ubuntu:~$ sudo bash
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#ff79c6">[</span>sudo<span style="color:#ff79c6">]</span> password <span style="color:#ff79c6">for</span> cruz: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>root@ubuntu:~# df -h
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>/dev/sda1       9.0G  2.7G  5.9G  32% /
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>udev            488M  4.0K  488M   1% /dev
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>tmpfs           199M  800K  198M   1% /run
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>none            5.0M     <span style="color:#bd93f9">0</span>  5.0M   0% /run/lock
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>none            497M   76K  496M   1% /run/shm
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>root@ubuntu:~# 
+</span></span></code></pre></div><h3 id="检查磁盘分区表">检查磁盘分区表： <a href="#%e6%a3%80%e6%9f%a5%e7%a3%81%e7%9b%98%e5%88%86%e5%8c%ba%e8%a1%a8" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>root@ubuntu:~# fdisk -l /dev/sda
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>Disk /dev/sda: 10.7 GB, <span style="color:#bd93f9">10737418240</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#bd93f9">255</span> heads, <span style="color:#bd93f9">63</span> sectors/track, <span style="color:#bd93f9">1305</span> cylinders, total <span style="color:#bd93f9">20971520</span> sectors
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#8be9fd;font-style:italic">Units</span> <span style="color:#ff79c6">=</span> sectors of <span style="color:#bd93f9">1</span> * <span style="color:#8be9fd;font-style:italic">512</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>Sector size <span style="color:#ff79c6">(</span>logical/physical<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>I/O size <span style="color:#ff79c6">(</span>minimum/optimal<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>Disk identifier: 0x00001dec
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>/dev/sda1   *        <span style="color:#bd93f9">2048</span>    <span style="color:#bd93f9">18874367</span>     <span style="color:#bd93f9">9436160</span>   <span style="color:#bd93f9">83</span>  Linux
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>/dev/sda2        <span style="color:#bd93f9">18876414</span>    <span style="color:#bd93f9">20969471</span>     <span style="color:#bd93f9">1046529</span>    <span style="color:#bd93f9">5</span>  Extended
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>/dev/sda5        <span style="color:#bd93f9">18876416</span>    <span style="color:#bd93f9">20969471</span>     <span style="color:#bd93f9">1046528</span>   <span style="color:#bd93f9">82</span>  Linux swap / Solaris
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>root@ubuntu:~# 
+</span></span></code></pre></div><p>记住上面显示的交换分区大小（Blocks的数目），这里就是1046528。如果交换分区和根目录不在一个磁盘(比如/dev/sdb），就不要记了。在本文，交换分区在/dev/sda，需要重新分区。</p>
+<h3 id="先关闭linux">先关闭linux： <a href="#%e5%85%88%e5%85%b3%e9%97%adlinux" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>root@ubuntu:~# shutdown -h now
+</span></span></code></pre></div><p>在虚拟机设置，硬盘，实用工具下选择扩展。扩展虚拟机的最大磁盘大小，这里将磁盘设置为15G，然后重启。</p>
+<p>重新设置分区表要删除所有的旧分区、关闭系统的swap:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>cruz@ubuntu:~$ sudo bash
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#ff79c6">[</span>sudo<span style="color:#ff79c6">]</span> password <span style="color:#ff79c6">for</span> cruz: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>root@ubuntu:~# free -m
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>             total       used       free     shared    buffers     cached
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>Mem:           <span style="color:#bd93f9">992</span>        <span style="color:#bd93f9">924</span>         <span style="color:#bd93f9">67</span>          <span style="color:#bd93f9">0</span>         <span style="color:#bd93f9">43</span>        <span style="color:#bd93f9">426</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span> -/+ buffers/cache:        <span style="color:#bd93f9">454</span>        <span style="color:#bd93f9">537</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>Swap:         <span style="color:#bd93f9">1021</span>          <span style="color:#bd93f9">0</span>       <span style="color:#bd93f9">1021</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>root@ubuntu:~# swapoff -a
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>root@ubuntu:~# free -m
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>             total       used       free     shared    buffers     cached
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>Mem:           <span style="color:#bd93f9">992</span>        <span style="color:#bd93f9">924</span>         <span style="color:#bd93f9">67</span>          <span style="color:#bd93f9">0</span>         <span style="color:#bd93f9">43</span>        <span style="color:#bd93f9">426</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span> -/+ buffers/cache:        <span style="color:#bd93f9">454</span>        <span style="color:#bd93f9">537</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>Swap:            <span style="color:#bd93f9">0</span>          <span style="color:#bd93f9">0</span>          <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>root@ubuntu:~# 
+</span></span></code></pre></div><p>接下来的步骤会删除/dev/sda1和/dev/sda2，一定要记住分区表的起始位置，这里是2048！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>root@ubuntu:~# fdisk /dev/sda
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: p
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>Disk /dev/sda: 16.1 GB, <span style="color:#bd93f9">16106127360</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#bd93f9">255</span> heads, <span style="color:#bd93f9">63</span> sectors/track, <span style="color:#bd93f9">1958</span> cylinders, total <span style="color:#bd93f9">31457280</span> sectors
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span><span style="color:#8be9fd;font-style:italic">Units</span> <span style="color:#ff79c6">=</span> sectors of <span style="color:#bd93f9">1</span> * <span style="color:#8be9fd;font-style:italic">512</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>Sector size <span style="color:#ff79c6">(</span>logical/physical<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>I/O size <span style="color:#ff79c6">(</span>minimum/optimal<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>Disk identifier: 0x00001dec
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>   Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>/dev/sda1   *        <span style="color:#bd93f9">2048</span>    <span style="color:#bd93f9">18874367</span>     <span style="color:#bd93f9">9436160</span>   <span style="color:#bd93f9">83</span>  Linux
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>/dev/sda2        <span style="color:#bd93f9">18876414</span>    <span style="color:#bd93f9">20969471</span>     <span style="color:#bd93f9">1046529</span>    <span style="color:#bd93f9">5</span>  Extended
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>/dev/sda5        <span style="color:#bd93f9">18876416</span>    <span style="color:#bd93f9">20969471</span>     <span style="color:#bd93f9">1046528</span>   <span style="color:#bd93f9">82</span>  Linux swap / Solaris
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: d
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>Partition number <span style="color:#ff79c6">(</span>1-5<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: d
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>Partition number <span style="color:#ff79c6">(</span>1-5<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: p
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>Disk /dev/sda: 16.1 GB, <span style="color:#bd93f9">16106127360</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span><span style="color:#bd93f9">255</span> heads, <span style="color:#bd93f9">63</span> sectors/track, <span style="color:#bd93f9">1958</span> cylinders, total <span style="color:#bd93f9">31457280</span> sectors
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27</span><span><span style="color:#8be9fd;font-style:italic">Units</span> <span style="color:#ff79c6">=</span> sectors of <span style="color:#bd93f9">1</span> * <span style="color:#8be9fd;font-style:italic">512</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28</span><span>Sector size <span style="color:#ff79c6">(</span>logical/physical<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29</span><span>I/O size <span style="color:#ff79c6">(</span>minimum/optimal<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30</span><span>Disk identifier: 0x00001dec
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32</span><span>   Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: 
+</span></span></code></pre></div><p>不要退出fdisk，接着创建新分区</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: n
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>Partition type:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>   p   primary <span style="color:#ff79c6">(</span><span style="color:#bd93f9">0</span> primary, <span style="color:#bd93f9">0</span> extended, <span style="color:#bd93f9">4</span> free<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>   e   extended
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>Select <span style="color:#ff79c6">(</span>default p<span style="color:#ff79c6">)</span>: p
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>Partition number <span style="color:#ff79c6">(</span>1-4, default 1<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>First sector <span style="color:#ff79c6">(</span>2048-31457279, default 2048<span style="color:#ff79c6">)</span>: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>Using default value <span style="color:#bd93f9">2048</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>Last sector, +sectors or +size<span style="color:#ff79c6">{</span>K,M,G<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">(</span>2048-31457279, default 31457279<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">30410751</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: n
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>Partition type:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>   p   primary <span style="color:#ff79c6">(</span><span style="color:#bd93f9">1</span> primary, <span style="color:#bd93f9">0</span> extended, <span style="color:#bd93f9">3</span> free<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>   e   extended
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>Select <span style="color:#ff79c6">(</span>default p<span style="color:#ff79c6">)</span>: p
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>Partition number <span style="color:#ff79c6">(</span>1-4, default 2<span style="color:#ff79c6">)</span>: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>Using default value <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>First sector <span style="color:#ff79c6">(</span>30410752-31457279, default 30410752<span style="color:#ff79c6">)</span>: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>Using default value <span style="color:#bd93f9">30410752</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>Last sector, +sectors or +size<span style="color:#ff79c6">{</span>K,M,G<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">(</span>30410752-31457279, default 31457279<span style="color:#ff79c6">)</span>: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>Using default value <span style="color:#bd93f9">31457279</span>
+</span></span></code></pre></div><p>注意记得创建交换分区，大小别搞错，这里是1046528（31457279-30410571=1046528），即要留一部分block用于创建swap。修改sda2的分区类型为82，即交换分区。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: p
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>Disk /dev/sda: 16.1 GB, <span style="color:#bd93f9">16106127360</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#bd93f9">255</span> heads, <span style="color:#bd93f9">63</span> sectors/track, <span style="color:#bd93f9">1958</span> cylinders, total <span style="color:#bd93f9">31457280</span> sectors
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#8be9fd;font-style:italic">Units</span> <span style="color:#ff79c6">=</span> sectors of <span style="color:#bd93f9">1</span> * <span style="color:#8be9fd;font-style:italic">512</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>Sector size <span style="color:#ff79c6">(</span>logical/physical<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>I/O size <span style="color:#ff79c6">(</span>minimum/optimal<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">512</span> bytes / <span style="color:#bd93f9">512</span> bytes
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>Disk identifier: 0x00001dec
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>   Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>/dev/sda1            <span style="color:#bd93f9">2048</span>    <span style="color:#bd93f9">30410751</span>    <span style="color:#bd93f9">15204352</span>   <span style="color:#bd93f9">83</span>  Linux
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>/dev/sda2        <span style="color:#bd93f9">30410752</span>    <span style="color:#bd93f9">31457279</span>      <span style="color:#bd93f9">523264</span>   <span style="color:#bd93f9">83</span>  Linux
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: t
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>Partition number <span style="color:#ff79c6">(</span>1-4<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>Hex code <span style="color:#ff79c6">(</span><span style="color:#8be9fd;font-style:italic">type</span> L to list codes<span style="color:#ff79c6">)</span>: <span style="color:#bd93f9">82</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>Changed system <span style="color:#8be9fd;font-style:italic">type</span> of partition <span style="color:#bd93f9">2</span> to <span style="color:#bd93f9">82</span> <span style="color:#ff79c6">(</span>Linux swap / Solaris<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>Command <span style="color:#ff79c6">(</span>m <span style="color:#ff79c6">for</span> <span style="color:#8be9fd;font-style:italic">help</span><span style="color:#ff79c6">)</span>: w
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>The partition table has been altered!
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>Calling ioctl<span style="color:#ff79c6">()</span> to re-read partition table.
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>The kernel still uses the old table. The new table will be used at
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span>the next reboot or after you run partprobe<span style="color:#ff79c6">(</span>8<span style="color:#ff79c6">)</span> or kpartx<span style="color:#ff79c6">(</span>8<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27</span><span>Syncing disks.
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28</span><span>root@ubuntu:~# 
+</span></span></code></pre></div><h3 id="重启虚拟机">重启虚拟机： <a href="#%e9%87%8d%e5%90%af%e8%99%9a%e6%8b%9f%e6%9c%ba" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>root@ubuntu:~# shutdown -r now
+</span></span></code></pre></div><p>交换分区挂载需要UUID标识符。创建新的交换分区不会匹配旧的UUID，导致重启无法挂载swap分区。这里主要有两种解决方法：在/etc/fstab里写入新的UUID，或者直接将旧的UUID覆盖在新分区上，这里选择后者。 awk命令用来显示旧的UUID，dd命令确保分区没数据。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>cruz@ubuntu:~$ sudo bash
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#ff79c6">[</span>sudo<span style="color:#ff79c6">]</span> password <span style="color:#ff79c6">for</span> cruz: 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>root@ubuntu:~#  awk <span style="color:#f1fa8c">&#39;/swap/ { print $1 }&#39;</span> /etc/fstab
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#6272a4">#</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#8be9fd;font-style:italic">UUID</span><span style="color:#ff79c6">=</span>8bb62351-4436-47df-92fe-af2865f03461
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>root@ubuntu:~# swapoff -a
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>root@ubuntu:~# free -m
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>             total       used       free     shared    buffers     cached
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>Mem:           <span style="color:#bd93f9">992</span>        <span style="color:#bd93f9">695</span>        <span style="color:#bd93f9">296</span>          <span style="color:#bd93f9">0</span>         <span style="color:#bd93f9">23</span>        <span style="color:#bd93f9">325</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>-/+ buffers/cache:        <span style="color:#bd93f9">346</span>        <span style="color:#bd93f9">645</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>Swap:            <span style="color:#bd93f9">0</span>          <span style="color:#bd93f9">0</span>          <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>root@ubuntu:~# dd <span style="color:#ff79c6">if</span><span style="color:#ff79c6">=</span>/dev/zero <span style="color:#8be9fd;font-style:italic">of</span><span style="color:#ff79c6">=</span>/dev/sda2
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>dd: writing to <span style="color:#f1fa8c">&#39;/dev/sda2&#39;</span>: No space left on device
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>1046529+0 records in
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>1046528+0 records out
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span><span style="color:#bd93f9">535822336</span> bytes <span style="color:#ff79c6">(</span><span style="color:#bd93f9">536</span> MB<span style="color:#ff79c6">)</span> copied, 11.9388 s, 44.9 MB/s
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>root@ubuntu:~# mkswap -U 8bb62351-4436-47df-92fe-af2865f03461 /dev/sda2
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>Setting up swapspace version 1, <span style="color:#8be9fd;font-style:italic">size</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">523260</span> KiB
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>no label, <span style="color:#8be9fd;font-style:italic">UUID</span><span style="color:#ff79c6">=</span>8bb62351-4436-47df-92fe-af2865f03461
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>root@ubuntu:~# swapon -a
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>root@ubuntu:~# free -m
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>             total       used       free     shared    buffers     cached
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>Mem:           <span style="color:#bd93f9">992</span>        <span style="color:#bd93f9">693</span>        <span style="color:#bd93f9">298</span>          <span style="color:#bd93f9">0</span>         <span style="color:#bd93f9">23</span>        <span style="color:#bd93f9">325</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>-/+ buffers/cache:        <span style="color:#bd93f9">345</span>        <span style="color:#bd93f9">646</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>Swap:          <span style="color:#bd93f9">510</span>          <span style="color:#bd93f9">7</span>        <span style="color:#bd93f9">503</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span>root@ubuntu:~#
+</span></span></code></pre></div><h3 id="最后调整分区大小">最后，调整分区大小： <a href="#%e6%9c%80%e5%90%8e%e8%b0%83%e6%95%b4%e5%88%86%e5%8c%ba%e5%a4%a7%e5%b0%8f" class="anchor">🔗</a></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>root@ubuntu:~# df -h
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>/dev/sda1       9.0G  2.8G  5.8G  33% /
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>udev            488M  4.0K  488M   1% /dev
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>tmpfs           199M  788K  198M   1% /run
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>none            5.0M     <span style="color:#bd93f9">0</span>  5.0M   0% /run/lock
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>none            497M  200K  496M   1% /run/shm
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>root@ubuntu:~# resize2fs /dev/sda1
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>resize2fs 1.42 <span style="color:#ff79c6">(</span>29-Nov-2011<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>Filesystem at /dev/sda1 is mounted on /; on-line resizing required
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span><span style="color:#8be9fd;font-style:italic">old_desc_blocks</span> <span style="color:#ff79c6">=</span> 1, <span style="color:#8be9fd;font-style:italic">new_desc_blocks</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>Performing an on-line resize of /dev/sda1 to <span style="color:#bd93f9">3801088</span> <span style="color:#ff79c6">(</span>4k<span style="color:#ff79c6">)</span> blocks.
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>The filesystem on /dev/sda1 is now <span style="color:#bd93f9">3801088</span> blocks long.
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>root@ubuntu:~# df -h
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>/dev/sda1        15G  2.8G   11G  21% /
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>udev            488M  4.0K  488M   1% /dev
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>tmpfs           199M  788K  198M   1% /run
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>none            5.0M     <span style="color:#bd93f9">0</span>  5.0M   0% /run/lock
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>none            497M  200K  496M   1% /run/shm
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>root@ubuntu:~# 
+</span></span></code></pre></div>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://blog.auuu.me/tags/linux">linux</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2024 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

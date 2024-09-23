@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <follow_challenge>
+        <feedId>60982902780392448</feedId>
+        <userId>55853716026366976</userId>
+    </follow_challenge>
+  <channel>
+    <title>Git on AuuuNya Blog</title>
+    <link>https://blog.auuu.me/tags/git/</link>
+    <description>feedId:60982902780392448+userId:55853716026366976 Recent content in Git on AuuuNya Blog</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <copyright>AuuuNya</copyright>
+    <lastBuildDate>Sat, 24 Mar 2018 13:50:33 +0800</lastBuildDate>
+    <atom:link href="https://blog.auuu.me/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git永久删除库中的文件</title>
+      <link>https://blog.auuu.me/posts/2018-3-24-git%E6%B0%B8%E4%B9%85%E5%88%A0%E9%99%A4%E5%BA%93%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Sat, 24 Mar 2018 13:50:33 +0800</pubDate>
+      <guid>https://blog.auuu.me/posts/2018-3-24-git%E6%B0%B8%E4%B9%85%E5%88%A0%E9%99%A4%E5%BA%93%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6/</guid>
+      <description>&lt;p&gt;如果使用git不小心提交了一个类似debug或者.swp的临时文件，即使用&lt;code&gt;git rm&lt;/code&gt;删除，只会向版本库中新增一条删除记录，之前提交的文件物理上还保存在版本库中，每次用&lt;code&gt;git clone&lt;/code&gt;的时候都会下载，时间久了，这样的文件多了，就会使得整个版本库庞大无比,所以需要找到将这些文件从版本库中物理删除的办法。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>公钥操作&#43; git搭载新项目</title>
+      <link>https://blog.auuu.me/posts/2018-2-22-%E5%85%AC%E9%92%A5%E6%93%8D%E4%BD%9C&#43;-git%E6%90%AD%E8%BD%BD%E6%96%B0%E9%A1%B9%E7%9B%AE/</link>
+      <pubDate>Thu, 22 Feb 2018 13:58:36 +0800</pubDate>
+      <guid>https://blog.auuu.me/posts/2018-2-22-%E5%85%AC%E9%92%A5%E6%93%8D%E4%BD%9C&#43;-git%E6%90%AD%E8%BD%BD%E6%96%B0%E9%A1%B9%E7%9B%AE/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

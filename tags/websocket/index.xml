@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <follow_challenge>
+        <feedId>60982902780392448</feedId>
+        <userId>55853716026366976</userId>
+    </follow_challenge>
+  <channel>
+    <title>Websocket on AuuuNya Blog</title>
+    <link>https://blog.auuu.me/tags/websocket/</link>
+    <description>feedId:60982902780392448+userId:55853716026366976 Recent content in Websocket on AuuuNya Blog</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <copyright>AuuuNya</copyright>
+    <lastBuildDate>Thu, 09 Apr 2020 23:59:15 +0800</lastBuildDate>
+    <atom:link href="https://blog.auuu.me/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Django使用Websocket,Channel初体验</title>
+      <link>https://blog.auuu.me/posts/django%E4%BD%BF%E7%94%A8websocketchannel%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
+      <pubDate>Thu, 09 Apr 2020 23:59:15 +0800</pubDate>
+      <guid>https://blog.auuu.me/posts/django%E4%BD%BF%E7%94%A8websocketchannel%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
+      <description>&lt;p&gt;很久都没更新文章了，最近恰好在做了一个服务端主动推送消息给客户端的需求，因为是第一次使用Channels模块，踩了不少坑，在这里记录一下。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

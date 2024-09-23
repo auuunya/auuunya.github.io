@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <title>(爬虫学习)40行代码爬取猫眼电影TOP100 | AuuuNya Blog</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="最近一直在学习爬虫方面的知识，在网上也找了很多书和视频来看，原来Web比爬虫简单多了，建议大家如果想快速上手Python的话先从Web方面入手应该会比较快。
+废话不多说，这篇文章是我学爬虫来踩的第一个坑，但绝不是最后一个,俗话说在失败中学习进步。从第一个错误到成功运行也是下了蛮大的功夫。">
+<meta name="generator" content="Hugo 0.129.0">
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>首页</a>
+	
+	<a href="/posts">归档</a>
+	<a href="/tags">标签</a>
+	<a href="/about">关于</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">(爬虫学习)40行代码爬取猫眼电影TOP100</h1>
+
+    <div class="tip">
+        <time datetime="2018-01-12 15:05:36 &#43;0800 CST">2018年01月12日</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          59字
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1分钟
+        </span>
+    </div>
+
+    
+    
+
+
+    <div class="content">
+      <p>最近一直在学习爬虫方面的知识，在网上也找了很多书和视频来看，原来Web比爬虫简单多了，建议大家如果想快速上手Python的话先从Web方面入手应该会比较快。</p>
+<p>废话不多说，这篇文章是我学爬虫来踩的第一个坑，但绝不是最后一个,俗话说在失败中学习进步。从第一个错误到成功运行也是下了蛮大的功夫。</p>
+<p>运行成功的图</p>
+<p><p class="markdown-image">
+  <img src="http://otsqi967f.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180112151439.png" alt=""  />
+</p></p>
+<p>上面图片拿到排行榜前20的电影名、封面图、播放地址、主演等等</p>
+<h3 id="正文来了">正文来了 <a href="#%e6%ad%a3%e6%96%87%e6%9d%a5%e4%ba%86" class="anchor">🔗</a></h3><p>要抓取的地址
+<code>http://maoyan.com/board/4</code>
+网上有好多库和模块大家都可以利用，本小白用的是<code>requests</code>这个模块,用<code>get</code>方法获取一个地址,它返回的是一个<code>Response</code>对象,我们可以利用
+<code>Response.status_code</code>来查看状态码确定网站是否访问成功</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>  response<span style="color:#ff79c6">=</span>requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>  <span style="color:#ff79c6">if</span> response<span style="color:#ff79c6">.</span>status_code<span style="color:#ff79c6">==</span><span style="color:#bd93f9">200</span>:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>    <span style="color:#ff79c6">return</span> response<span style="color:#ff79c6">.</span>text
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span><span style="color:#ff79c6">except</span> RequestException:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span>  <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>
+</span></span></code></pre></div><p>个人觉得，爬虫最主要的就是对页面的分析，你要清楚你需要的是什么数据，你需要的数据是在HTML里还是JSON里或是其他地方，
+在这里不得不介绍我最喜欢的chrome开发者工具，当然也有其他的，不过用惯了chrome，拿到页面按F12,打开控制台。
+<p class="markdown-image">
+  <img src="http://otsqi967f.bkt.clouddn.com/timg.jpg" alt=""  />
+</p>
+这个主要介绍 Network 这个功能，是我们学习爬虫要经常用的。</p>
+<p><p class="markdown-image">
+  <img src="http://otsqi967f.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180112153610.png" alt=""  />
+</p></p>
+<p>在《霸王别姬》这部电影按鼠标右键然后<strong>审查元素或者检查(chrome是检查)<strong>通过对页面的分析我们可以得知每部电影都在一个<code>&lt;dd&gt;</code>标签中包裹
+它们的排名、图片、地址、演员、评分又分别在不同的标签里面,标签我们可以用<code>beautifulsoup</code>、<code>xpath</code>等<code>Python</code>上面的解析库和第三方库来选取
+这样是最简单的，不过我这里用的是</strong>正则</strong>来匹配。可能是没被正则虐够吧,顺带给大家推荐个正则在线测试的地址<a href="http://tool.oschina.net/regex/" target="_blank" rel="noopener">正则在线测试</a>
+我们要拿到的就是图上红框里面的几个内容。
+正则表达式如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>patten<span style="color:#ff79c6">=</span>re<span style="color:#ff79c6">.</span>compile(<span style="color:#f1fa8c">&#39;&lt;dd&gt;.*?board-index.*?&gt;(\d+)&lt;/i&gt;.*?data-src=&#34;(.*?)&#34;.*?name&#34;&gt;&#39;</span>\
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>                  <span style="color:#f1fa8c">&#39;&lt;a.*?&gt;(.*?)&lt;/a&gt;.*?star&#34;&gt;(.*?)&lt;/p&gt;.*?releasetime&#34;&gt;(.*?)&lt;/p&gt;&#39;</span>\
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>                  <span style="color:#f1fa8c">&#39;.*?integer&#34;&gt;(.*?)&lt;/i&gt;.*?fraction&#34;&gt;(.*?)&lt;/i&gt;.*?&#39;</span>,re<span style="color:#ff79c6">.</span>S)
+</span></span></code></pre></div><p><code>.*?</code>表示非贪婪匹配意思就是往最少的匹配，只要刚好到临界点就立马停止匹配
+<code>re.S</code>表示<code>.</code>可以匹配换行符
+拿到数据之后就是保存的问题，保存的时候一定要注意编码，不然拿到的数据一定会乱码
+代码如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">save_content</span>(content):
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>  <span style="color:#ff79c6">with</span> <span style="color:#8be9fd;font-style:italic">open</span>(<span style="color:#f1fa8c">&#39;movie.txt&#39;</span>,<span style="color:#f1fa8c">&#39;a&#39;</span>,encoding<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf-8&#39;</span>) <span style="color:#ff79c6">as</span> f:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>    f<span style="color:#ff79c6">.</span>write(json<span style="color:#ff79c6">.</span>dumps(content,ensure_ascii<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>)<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">\n</span><span style="color:#f1fa8c">&#39;</span>)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>    f<span style="color:#ff79c6">.</span>close()
+</span></span></code></pre></div><p><a href="https://github.com/ma1ive/scrapy/blob/master/MovieTop100.py" target="_blank" rel="noopener">完整代码</a>
+保存完之后就大功告成了，代码中我们可以多做优化，肯定是不会超过40行的，我们还可以添加其他功能。
+在这里主要想告诉大家的是爬取一个页面的时候一定要对需要爬取的数据和页面内容好好分析，这样在编码过程中不至于一卡一顿的。</p>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://blog.auuu.me/tags/python">Python</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2024 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>
