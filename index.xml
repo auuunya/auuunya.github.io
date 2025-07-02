@@ -11,28 +11,14 @@
     <generator>Hugo</generator>
     <language>zh</language>
     <copyright>AuuuNya</copyright>
-    <lastBuildDate>Sun, 02 Jan 2022 16:38:09 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 Apr 2020 23:59:15 +0800</lastBuildDate>
     <atom:link href="https://blog.auuu.me/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>2021年终总结</title>
-      <link>https://blog.auuu.me/posts/2021%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</link>
-      <pubDate>Sun, 02 Jan 2022 16:38:09 +0800</pubDate>
-      <guid>https://blog.auuu.me/posts/2021%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</guid>
-      <description>&lt;p&gt;去年疫情在家隔离,不出意外今年还在家隔离,闲下心来,回顾一下这两年发生的事情吧&amp;hellip;&lt;/p&gt;</description>
-    </item>
     <item>
       <title>Django使用Websocket,Channel初体验</title>
       <link>https://blog.auuu.me/posts/django%E4%BD%BF%E7%94%A8websocketchannel%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
       <pubDate>Thu, 09 Apr 2020 23:59:15 +0800</pubDate>
       <guid>https://blog.auuu.me/posts/django%E4%BD%BF%E7%94%A8websocketchannel%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
       <description>&lt;p&gt;很久都没更新文章了，最近恰好在做了一个服务端主动推送消息给客户端的需求，因为是第一次使用Channels模块，踩了不少坑，在这里记录一下。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>2019的一些琐事</title>
-      <link>https://blog.auuu.me/posts/2019%E5%B9%B4%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%90%E4%BA%8B/</link>
-      <pubDate>Tue, 07 Jan 2020 23:23:19 +0800</pubDate>
-      <guid>https://blog.auuu.me/posts/2019%E5%B9%B4%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%90%E4%BA%8B/</guid>
-      <description>&lt;p&gt;眨眼就到2020年了,不由得感慨时间过得真快,回想这一年来发生的事,那可真谓是丰富多彩,多滋多味.(不知道18年立的Flag实现了多少???)&lt;/p&gt;&#xA;&lt;p&gt;成长不少,难过也不见得少&amp;hellip;&amp;hellip;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Element UI修改默认样式</title>
@@ -165,7 +151,7 @@
       <link>https://blog.auuu.me/about/</link>
       <pubDate>Sun, 01 Jan 2017 23:59:59 +0800</pubDate>
       <guid>https://blog.auuu.me/about/</guid>
-      <description>ID：张阳阳_Auuu&#xA;目前在西安这座古城辛勤搬砖 🔗会使用不同语言编写Hello,World的一只小菜鸟 🔗想好好搞技术，但是看啥都很吃力(太不友好了@ @ 🔗联系方式 🔗 QQ：937576339&#xA;Email：ma1ive@qq.com&#xA;其他社交 🔗 Telegram#AuuuNya&#xA;Weibo&#xA;LAST：&#xA;想好好学习深入一门语言&#xA;1func main(){ 2 fmt.Println(&amp;#34;Hello,World!&amp;#34;) 3} </description>
+      <description>ID：张阳阳_Auuu&#xA;目前在西安这座古城辛勤搬砖 🔗会使用不同语言编写Hello,World的一只小菜鸟 🔗想好好搞技术，但是看啥都很吃力(太不友好了@ @ 🔗联系方式 🔗 QQ：937576339&#xA;Email：ma1ive@qq.com&#xA;其他社交 🔗 Telegram#AuuuNya&#xA;Weibo&#xA;LAST：&#xA;想好好学习深入一门语言&#xA;\我好菜 </description>
     </item>
     <item>
       <title>Links</title>
