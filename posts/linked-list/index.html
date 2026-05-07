@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>理解链表：节点与指针的动态连接 | Inkgraph</title>
+    <meta name="description" content="链表：动态连接的线性数据结构 概述 链表（Linked List）是一种线性数据结构，其核心特征是通过指针实现元素间的动态连接。与数组等静态结构不同，链表的节点在内存中无需连续存储，这种特性使其在动态数据管理场景中具有独特优势。 核心概念 链表由若干**节点（Node）**组成，每个节点包含两个核心要素： 数据域（Data） 存储实际的数据内容，类型可以是整 …">
+    <link rel="canonical" href="//localhost:1313/posts/linked-list/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="理解链表：节点与指针的动态连接 | Inkgraph">
+    <meta property="og:description" content="链表：动态连接的线性数据结构 概述 链表（Linked List）是一种线性数据结构，其核心特征是通过指针实现元素间的动态连接。与数组等静态结构不同，链表的节点在内存中无需连续存储，这种特性使其在动态数据管理场景中具有独特优势。 核心概念 链表由若干**节点（Node）**组成，每个节点包含两个核心要素： 数据域（Data） 存储实际的数据内容，类型可以是整 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/linked-list/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="理解链表：节点与指针的动态连接 | Inkgraph">
+    <meta name="twitter:description" content="链表：动态连接的线性数据结构 概述 链表（Linked List）是一种线性数据结构，其核心特征是通过指针实现元素间的动态连接。与数组等静态结构不同，链表的节点在内存中无需连续存储，这种特性使其在动态数据管理场景中具有独特优势。 核心概念 链表由若干**节点（Node）**组成，每个节点包含两个核心要素： 数据域（Data） 存储实际的数据内容，类型可以是整 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>理解链表：节点与指针的动态连接</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="链表动态连接的线性数据结构">链表：动态连接的线性数据结构</h1>
+<h2 id="概述">概述</h2>
+<p>链表（Linked List）是一种<strong>线性数据结构</strong>，其核心特征是通过<strong>指针</strong>实现元素间的动态连接。与数组等静态结构不同，链表的节点在内存中无需连续存储，这种特性使其在动态数据管理场景中具有独特优势。</p>
+<h2 id="核心概念">核心概念</h2>
+<p>链表由若干**节点（Node）**组成，每个节点包含两个核心要素：</p>
+<ol>
+<li>
+<p><strong>数据域（Data）</strong><br>
+存储实际的数据内容，类型可以是整数、字符串或任意复杂对象。</p>
+</li>
+<li>
+<p><strong>指针域（Next）</strong><br>
+存储指向<strong>下一个节点的地址</strong>，通过该指针实现节点间的逻辑连接。</p>
+</li>
+</ol>
+<p>链表的起点称为<strong>头节点（Head）</strong>，末尾节点的指针通常指向空（<code>null</code>或<code>nil</code>）。这种结构允许链表在运行时动态扩展或收缩，但需要额外的内存开销存储指针。</p>
+<h2 id="工作原理">工作原理</h2>
+<p>链表通过指针的逐层跳转实现数据访问。例如：</p>
+<ul>
+<li><strong>遍历操作</strong>：从头节点出发，依次通过<code>Next</code>指针访问后续节点，直到指针为<code>null</code>。</li>
+<li><strong>插入操作</strong>：需修改相关节点的指针指向，例如在指定位置插入新节点时，需调整前驱节点和后继节点的指针。</li>
+<li><strong>删除操作</strong>：通过修改前驱节点的指针跳过目标节点，但需注意内存释放（在需要手动管理内存的语言中）。</li>
+</ul>
+<p>与数组相比，链表在<strong>动态扩容</strong>和<strong>中间节点操作</strong>上效率更高，但随机访问的时间复杂度为<code>O(n)</code>，不如数组的<code>O(1)</code>。</p>
+<h2 id="适用场景与边界">适用场景与边界</h2>
+<p>链表特别适合以下场景：</p>
+<ul>
+<li>需频繁插入/删除元素的动态集合（如实现栈、队列）</li>
+<li>内存碎片化严重的嵌入式系统</li>
+<li>需要灵活调整数据结构大小的场景</li>
+</ul>
+<p>但需注意：</p>
+<ul>
+<li><strong>内存开销</strong>：每个节点需额外存储指针，空间利用率低于数组</li>
+<li><strong>缓存不友好</strong>：指针跳转可能导致CPU缓存命中率下降</li>
+<li><strong>实现复杂度</strong>：相比数组，链表操作需处理更多边界条件（如空指针）</li>
+</ul>
+<h2 id="相关数据结构对比">相关数据结构对比</h2>
+<p>链表与<strong>堆（Heap）</strong>、<strong>Trie</strong>等结构共享<code>data-structure</code>标签，但适用场景不同：</p>
+<ul>
+<li><strong>堆</strong>：基于树形结构实现优先级队列，适合需要快速获取最大/最小值的场景</li>
+<li><strong>Trie</strong>：通过共享前缀优化字符串存储，适用于词典、自动补全等场景</li>
+</ul>
+<p>这些结构在底层实现上均依赖指针（或引用）连接数据单元，但具体组织方式和访问模式存在本质差异。</p>
+<h2 id="总结">总结</h2>
+<p>链表通过指针实现动态连接，是线性数据结构中灵活性与扩展性兼具的方案。其核心价值在于通过牺牲部分空间效率换取动态操作的便利性，但具体使用时需结合场景权衡性能与实现复杂度。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

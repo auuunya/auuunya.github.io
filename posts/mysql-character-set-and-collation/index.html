@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>MySQL 字符集与排序规则对比：utf8mb4 与 utf8 选型指南 | Inkgraph</title>
+    <meta name="description" content="MySQL 字符集与排序规则选择指南 概述 本文聚焦 MySQL 中字符集（character set）与排序规则（collation）的选型问题，对比 utf8mb4 与 utf8 等字符集、general_ci/unicode_ci/bin 等排序规则在性能、准确性、多语言支持等维度的差异，提供按场景选择的决策依据。 核心概念 字符集 vs 排序规则 字 …">
+    <link rel="canonical" href="//localhost:1313/posts/mysql-character-set-and-collation/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="MySQL 字符集与排序规则对比：utf8mb4 与 utf8 选型指南 | Inkgraph">
+    <meta property="og:description" content="MySQL 字符集与排序规则选择指南 概述 本文聚焦 MySQL 中字符集（character set）与排序规则（collation）的选型问题，对比 utf8mb4 与 utf8 等字符集、general_ci/unicode_ci/bin 等排序规则在性能、准确性、多语言支持等维度的差异，提供按场景选择的决策依据。 核心概念 字符集 vs 排序规则 字 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/mysql-character-set-and-collation/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MySQL 字符集与排序规则对比：utf8mb4 与 utf8 选型指南 | Inkgraph">
+    <meta name="twitter:description" content="MySQL 字符集与排序规则选择指南 概述 本文聚焦 MySQL 中字符集（character set）与排序规则（collation）的选型问题，对比 utf8mb4 与 utf8 等字符集、general_ci/unicode_ci/bin 等排序规则在性能、准确性、多语言支持等维度的差异，提供按场景选择的决策依据。 核心概念 字符集 vs 排序规则 字 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>MySQL 字符集与排序规则对比：utf8mb4 与 utf8 选型指南</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="mysql-字符集与排序规则选择指南">MySQL 字符集与排序规则选择指南</h1>
+<h2 id="概述">概述</h2>
+<p>本文聚焦 MySQL 中字符集（character set）与排序规则（collation）的选型问题，对比 utf8mb4 与 utf8 等字符集、general_ci/unicode_ci/bin 等排序规则在性能、准确性、多语言支持等维度的差异，提供按场景选择的决策依据。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="字符集-vs-排序规则">字符集 vs 排序规则</h3>
+<ul>
+<li><strong>字符集</strong>（如 utf8mb4）定义数据的存储方式，决定可表示的字符范围。</li>
+<li><strong>排序规则</strong>（如 utf8mb4_unicode_ci）定义字符比较和排序逻辑，影响查询结果的排序与模糊匹配行为。</li>
+</ul>
+<h3 id="常见字符集对比">常见字符集对比</h3>
+<table>
+  <thead>
+      <tr>
+          <th>字符集</th>
+          <th>特点</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>utf8</code></td>
+          <td>仅支持最多 3 字节字符，无法完整表示 Unicode 字符</td>
+          <td>早期项目迁移阶段（已不推荐）</td>
+      </tr>
+      <tr>
+          <td><code>utf8mb4</code></td>
+          <td>支持 4 字节字符（如表情符号），完整覆盖 Unicode 13.0</td>
+          <td>现代多语言应用（推荐默认选项）</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="排序规则维度分析">排序规则维度分析</h2>
+<h3 id="1-性能-vs-准确性">1. 性能 vs 准确性</h3>
+<ul>
+<li><strong>高性能</strong>：<code>utf8mb4_general_ci</code>（通用规则，不保证语义准确性）、<code>utf8mb4_bin</code>（二进制比较，无语言规则开销）</li>
+<li><strong>高准确性</strong>：<code>utf8mb4_unicode_ci</code>（遵循 Unicode 标准）、<code>utf8mb4_0900_ai_ci</code>（基于 Unicode 9.0，忽略重音和大小写）</li>
+</ul>
+<blockquote>
+<p>冲突说明：<code>utf8mb4_unicode_ci</code> 的排序准确性优于 <code>utf8mb4_general_ci</code>，但性能略低；<code>utf8mb4_bin</code> 虽性能高，但不符合人类语义（如 &ldquo;A&rdquo; 与 &ldquo;a&rdquo; 被视为不同字符）。</p>
+</blockquote>
+<hr>
+<h3 id="2-多语言支持">2. 多语言支持</h3>
+<ul>
+<li><strong>广泛支持</strong>：<code>utf8mb4_unicode_ci</code>（覆盖 Unicode 5.2 以上字符）、<code>utf8mb4_0900_ai_ci</code>（支持 Unicode 9.0）</li>
+<li><strong>有限支持</strong>：<code>latin1_swedish_ci</code>（仅适用于西欧语言）、<code>ascii_general_ci</code>（仅 ASCII 字符）</li>
+</ul>
+<blockquote>
+<p>注意：<code>utf8mb4_unicode_ci</code> 与 <code>utf8mb4_0900_ai_ci</code> 的差异在于 Unicode 版本，前者兼容性更广，后者适用于需要现代 Unicode 特性的场景。</p>
+</blockquote>
+<hr>
+<h3 id="3-特定语言需求">3. 特定语言需求</h3>
+<table>
+  <thead>
+      <tr>
+          <th>排序规则</th>
+          <th>适用语言</th>
+          <th>特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>utf8mb4_zh_pinyin_ci</code></td>
+          <td>中文</td>
+          <td>按拼音排序，符合中文语义（如 &ldquo;Zhang&rdquo; 排在 &ldquo;Zhao&rdquo; 前）</td>
+      </tr>
+      <tr>
+          <td><code>utf8mb4_ja_0900_as_cs</code></td>
+          <td>日语</td>
+          <td>区分大小写和重音（如 &ldquo;É&rdquo; 与 &ldquo;E&rdquo; 视为不同字符）</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="使用方法">使用方法</h2>
+<h3 id="创建数据库表时指定字符集与排序规则">创建数据库/表时指定字符集与排序规则</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 创建数据库
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DATABASE</span> gfast CHARACTER <span style="color:#66d9ef">SET</span> utf8mb4 <span style="color:#66d9ef">COLLATE</span> utf8mb4_unicode_ci;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 创建表
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+</span></span><span style="display:flex;"><span>    id INT <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
+</span></span><span style="display:flex;"><span>    name VARCHAR(<span style="color:#ae81ff">50</span>) <span style="color:#66d9ef">COLLATE</span> utf8mb4_general_ci
+</span></span><span style="display:flex;"><span>) CHARACTER <span style="color:#66d9ef">SET</span> utf8mb4 <span style="color:#66d9ef">COLLATE</span> utf8mb4_unicode_ci;
+</span></span></code></pre></div><blockquote>
+<p>注意：表级排序规则会覆盖列级设置，需根据字段需求单独指定。</p>
+</blockquote>
+<hr>
+<h2 id="场景化选择建议">场景化选择建议</h2>
+<table>
+  <thead>
+      <tr>
+          <th>场景需求</th>
+          <th>推荐方案</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>多语言支持 + 性能优先</td>
+          <td><code>utf8mb4_general_ci</code></td>
+          <td>快速排序，适合国际化应用</td>
+      </tr>
+      <tr>
+          <td>多语言支持 + 准确性优先</td>
+          <td><code>utf8mb4_unicode_ci</code> 或 <code>utf8mb4_0900_ai_ci</code></td>
+          <td>符合 Unicode 标准，适合需要语义排序的场景</td>
+      </tr>
+      <tr>
+          <td>中文拼音排序</td>
+          <td><code>utf8mb4_zh_pinyin_ci</code></td>
+          <td>保证中文姓名/地址的自然排序</td>
+      </tr>
+      <tr>
+          <td>大小写敏感（如密码存储）</td>
+          <td><code>utf8mb4_bin</code></td>
+          <td>完全区分大小写，避免 &ldquo;Pass&rdquo; 与 &ldquo;pass&rdquo; 冲突</td>
+      </tr>
+      <tr>
+          <td>日语特殊需求</td>
+          <td><code>utf8mb4_ja_0900_as_cs</code></td>
+          <td>区分重音与大小写，满足日语词典排序</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="1-为什么-utf8mb4_unicode_ci-比-utf8mb4_general_ci-更推荐">1. 为什么 <code>utf8mb4_unicode_ci</code> 比 <code>utf8mb4_general_ci</code> 更推荐？</h3>
+<ul>
+<li><code>utf8mb4_unicode_ci</code> 基于 Unicode 标准，能正确处理更多语言的语义排序（如德语的 ß 与 ss 区分）。</li>
+<li><code>utf8mb4_general_ci</code> 为兼容性设计，但存在排序规则不一致的问题（如 &ldquo;ß&rdquo; 可能被排序为 &ldquo;ss&rdquo;）。</li>
+</ul>
+<h3 id="2-如何避免排序规则冲突">2. 如何避免排序规则冲突？</h3>
+<ul>
+<li><strong>统一字符集</strong>：全库使用 <code>utf8mb4</code>，避免 <code>utf8</code> 与 <code>utf8mb4</code> 混用导致的隐式转换。</li>
+<li><strong>显式指定排序规则</strong>：在建表/建库时显式声明，避免依赖数据库默认设置。</li>
+</ul>
+<hr>
+<h2 id="总结">总结</h2>
+<p>MySQL 的字符集与排序规则选择需权衡性能、准确性与语言需求。对于现代多语言应用，推荐使用 <code>utf8mb4_unicode_ci</code> 作为默认排序规则；若涉及中文拼音或日语特殊需求，应选择对应的本地化规则。始终通过显式声明字符集与排序规则，避免隐式转换带来的兼容性风险。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

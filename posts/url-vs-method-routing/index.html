@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>路由映射结构对比：URL 主导 vs 方法主导 | Inkgraph</title>
+    <meta name="description" content="路由设计中两种映射结构的对比分析 概述 在构建 Web 框架或设计 API 接口时，路由映射结构的选择直接影响系统扩展性和开发效率。本文对比两种主流路由映射结构：map[path][method] 和 map[method][path]，分析其设计逻辑与适用场景，帮助开发者根据实际需求做出选择。 核心概念 1. map[path][method] 结构 设计 …">
+    <link rel="canonical" href="//localhost:1313/posts/url-vs-method-routing/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="路由映射结构对比：URL 主导 vs 方法主导 | Inkgraph">
+    <meta property="og:description" content="路由设计中两种映射结构的对比分析 概述 在构建 Web 框架或设计 API 接口时，路由映射结构的选择直接影响系统扩展性和开发效率。本文对比两种主流路由映射结构：map[path][method] 和 map[method][path]，分析其设计逻辑与适用场景，帮助开发者根据实际需求做出选择。 核心概念 1. map[path][method] 结构 设计 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/url-vs-method-routing/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="路由映射结构对比：URL 主导 vs 方法主导 | Inkgraph">
+    <meta name="twitter:description" content="路由设计中两种映射结构的对比分析 概述 在构建 Web 框架或设计 API 接口时，路由映射结构的选择直接影响系统扩展性和开发效率。本文对比两种主流路由映射结构：map[path][method] 和 map[method][path]，分析其设计逻辑与适用场景，帮助开发者根据实际需求做出选择。 核心概念 1. map[path][method] 结构 设计 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>路由映射结构对比：URL 主导 vs 方法主导</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="路由设计中两种映射结构的对比分析">路由设计中两种映射结构的对比分析</h1>
+<h2 id="概述">概述</h2>
+<p>在构建 Web 框架或设计 API 接口时，路由映射结构的选择直接影响系统扩展性和开发效率。本文对比两种主流路由映射结构：<code>map[path][method]</code> 和 <code>map[method][path]</code>，分析其设计逻辑与适用场景，帮助开发者根据实际需求做出选择。</p>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="1-mappathmethod-结构">1. <code>map[path][method]</code> 结构</h3>
+<ul>
+<li><strong>设计逻辑</strong>：以 URL 路径为第一维度，HTTP 方法为第二维度建立映射关系。例如 <code>/user</code> 路径下分别存储 <code>GET</code>、<code>POST</code> 等方法的处理函数。</li>
+<li><strong>特点</strong>：路径优先的层级结构，天然支持路径参数提取（如 <code>/user/:id</code>）。</li>
+</ul>
+<h3 id="2-mapmethodpath-结构">2. <code>map[method][path]</code> 结构</h3>
+<ul>
+<li><strong>设计逻辑</strong>：以 HTTP 方法为第一维度，URL 路径为第二维度建立映射关系。例如 <code>GET</code> 方法下存储 <code>/user</code>、<code>/user/:id</code> 等路径的处理函数。</li>
+<li><strong>特点</strong>：方法优先的扁平化结构，更符合 RESTful API 的设计哲学。</li>
+</ul>
+<h2 id="工作原理">工作原理</h2>
+<h3 id="匹配流程差异">匹配流程差异</h3>
+<ul>
+<li><strong><code>map[path][method]</code></strong>：系统先解析 URL 路径，再根据 HTTP 方法查找对应处理函数。适合路径规则复杂但方法种类有限的场景。</li>
+<li><strong><code>map[method][path]</code></strong>：系统先确定 HTTP 方法，再匹配 URL 路径。这种设计更贴近 HTTP 协议本身的语义分层。</li>
+</ul>
+<h3 id="性能考量">性能考量</h3>
+<p>两种结构在大多数现代语言中性能差异可忽略，但 <code>map[method][path]</code> 的扁平化结构可能在多线程环境下减少哈希冲突概率。</p>
+<h2 id="使用场景对比">使用场景对比</h2>
+<table>
+  <thead>
+      <tr>
+          <th>场景类型</th>
+          <th>推荐结构</th>
+          <th>原因说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>静态路由</td>
+          <td><code>map[path][method]</code></td>
+          <td>路径规则固定，便于通过路径前缀快速定位处理函数</td>
+      </tr>
+      <tr>
+          <td>RESTful API</td>
+          <td><code>map[method][path]</code></td>
+          <td>符合 HTTP 方法与资源操作的语义对应（如 GET/POST 与 查询/创建 的关联）</td>
+      </tr>
+      <tr>
+          <td>路径参数复杂场景</td>
+          <td><code>map[path][method]</code></td>
+          <td>支持更灵活的路径模板匹配（如 <code>/user/{id}</code>）</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="实现注意事项">实现注意事项</h2>
+<ol>
+<li>
+<p><strong>框架适配性</strong><br>
+大多数现代 Web 框架（如 Express.js、Spring MVC）默认采用 <code>map[path][method]</code> 结构，但可通过自定义路由注册实现 <code>map[method][path]</code> 的语义。</p>
+</li>
+<li>
+<p><strong>RESTful 遵循原则</strong><br>
+若采用 <code>map[method][path]</code>，需严格遵守 RESTful 设计规范：</p>
+<ul>
+<li>使用 <code>GET</code> 仅作查询（无副作用）</li>
+<li>使用 <code>POST</code> 作创建/更新（幂等性需额外保障）</li>
+<li>使用 <code>DELETE</code> 作删除（遵循 HTTP 方法语义）</li>
+</ul>
+</li>
+<li>
+<p><strong>混合场景处理</strong><br>
+在实际项目中，两种结构可共存：</p>
+<ul>
+<li>对 <code>/api/v1/*</code> 路径使用 <code>map[path][method]</code> 管理版本化接口</li>
+<li>对 <code>/static/*</code> 路径使用 <code>map[method][path]</code> 简化静态资源处理</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结">总结</h2>
+<p>选择路由映射结构本质上是开发效率与设计哲学的权衡。<code>map[path][method]</code> 更适合需要精细控制路径规则的场景，而 <code>map[method][path]</code> 更契合 RESTful API 的语义规范。建议根据项目规模、团队熟悉度及接口规范要求进行选择，必要时可在框架层实现混合路由策略。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

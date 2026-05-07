@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Docker/Podman 启动 MySQL/PostgreSQL 等数据库容器实战 | Inkgraph</title>
+    <meta name="description" content="使用 Podman/Docker 启动常见数据库容器的完整指南 概述 容器化数据库部署已成为现代开发和运维的标准实践。本文聚焦于使用 Podman 和 Docker 启动 MySQL、PostgreSQL、MongoDB、Redis 等常见数据库容器的完整操作流程，涵盖环境变量配置、卷挂载、端口映射及数据持久化方法。适用于需要快速搭建测试环境或生产数据库服务 …">
+    <link rel="canonical" href="//localhost:1313/posts/docker-podman-database-container-setup/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="Docker/Podman 启动 MySQL/PostgreSQL 等数据库容器实战 | Inkgraph">
+    <meta property="og:description" content="使用 Podman/Docker 启动常见数据库容器的完整指南 概述 容器化数据库部署已成为现代开发和运维的标准实践。本文聚焦于使用 Podman 和 Docker 启动 MySQL、PostgreSQL、MongoDB、Redis 等常见数据库容器的完整操作流程，涵盖环境变量配置、卷挂载、端口映射及数据持久化方法。适用于需要快速搭建测试环境或生产数据库服务 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/docker-podman-database-container-setup/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Docker/Podman 启动 MySQL/PostgreSQL 等数据库容器实战 | Inkgraph">
+    <meta name="twitter:description" content="使用 Podman/Docker 启动常见数据库容器的完整指南 概述 容器化数据库部署已成为现代开发和运维的标准实践。本文聚焦于使用 Podman 和 Docker 启动 MySQL、PostgreSQL、MongoDB、Redis 等常见数据库容器的完整操作流程，涵盖环境变量配置、卷挂载、端口映射及数据持久化方法。适用于需要快速搭建测试环境或生产数据库服务 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>Docker/Podman 启动 MySQL/PostgreSQL 等数据库容器实战</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="使用-podmandocker-启动常见数据库容器的完整指南">使用 Podman/Docker 启动常见数据库容器的完整指南</h1>
+<h2 id="概述">概述</h2>
+<p>容器化数据库部署已成为现代开发和运维的标准实践。本文聚焦于使用 Podman 和 Docker 启动 MySQL、PostgreSQL、MongoDB、Redis 等常见数据库容器的完整操作流程，涵盖环境变量配置、卷挂载、端口映射及数据持久化方法。适用于需要快速搭建测试环境或生产数据库服务的场景。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="容器启动参数解析">容器启动参数解析</h3>
+<table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>作用</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>-d</code></td>
+          <td>后台运行容器</td>
+          <td><code>podman run -d</code></td>
+      </tr>
+      <tr>
+          <td><code>--name</code></td>
+          <td>自定义容器名称</td>
+          <td><code>--name mysql-container</code></td>
+      </tr>
+      <tr>
+          <td><code>-e</code></td>
+          <td>设置环境变量（如密码、数据库名）</td>
+          <td><code>-e MYSQL_ROOT_PASSWORD=123456</code></td>
+      </tr>
+      <tr>
+          <td><code>-v</code></td>
+          <td>挂载本地目录实现数据持久化</td>
+          <td><code>-v /host/path:/container/path</code></td>
+      </tr>
+      <tr>
+          <td><code>-p</code></td>
+          <td>端口映射（宿主机:容器）</td>
+          <td><code>-p 3306:3306</code></td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：Podman 与 Docker 的命令语法高度兼容，但 Podman 默认无需守护进程（无 <code>dockerd</code>），更适合无服务场景。</p>
+</blockquote>
+<hr>
+<h2 id="使用方法">使用方法</h2>
+<h3 id="1-启动数据库容器">1. 启动数据库容器</h3>
+<h4 id="mysqlmariadb-示例">MySQL/MariaDB 示例</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name mysql-container <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e MYSQL_ROOT_PASSWORD<span style="color:#f92672">=</span>your_password <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e MYSQL_DATABASE<span style="color:#f92672">=</span>testdb <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v /data/mysql:/var/lib/mysql <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -p 3306:3306 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  mysql:8.0
+</span></span></code></pre></div><ul>
+<li><code>MYSQL_ROOT_PASSWORD</code>：设置 root 用户密码</li>
+<li><code>MYSQL_DATABASE</code>：自动创建数据库</li>
+<li><code>-v</code> 挂载路径需提前创建（如 <code>/data/mysql</code>）</li>
+</ul>
+<h4 id="postgresql-示例">PostgreSQL 示例</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name postgres-container <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e POSTGRES_PASSWORD<span style="color:#f92672">=</span>your_password <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e POSTGRES_DB<span style="color:#f92672">=</span>testdb <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v /data/postgres:/var/lib/postgresql/data <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -p 5432:5432 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  postgres:13
+</span></span></code></pre></div><ul>
+<li><code>POSTGRES_PASSWORD</code>：设置默认用户密码</li>
+<li><code>POSTGRES_DB</code>：自动创建数据库</li>
+</ul>
+<h4 id="mongodb-示例">MongoDB 示例</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name mongo-container <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e MONGO_INITDB_ROOT_USERNAME<span style="color:#f92672">=</span>admin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e MONGO_INITDB_ROOT_PASSWORD<span style="color:#f92672">=</span>your_password <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v /data/mongo:/data/db <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -p 27017:27017 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  mongo:4.4
+</span></span></code></pre></div><ul>
+<li><code>MONGO_INITDB_*</code> 环境变量用于初始化管理员账户</li>
+</ul>
+<h4 id="redis-示例">Redis 示例</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name redis-container <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -e REDIS_PASSWORD<span style="color:#f92672">=</span>your_password <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v /data/redis:/data <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -p 6379:6379 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  redis:6.2
+</span></span></code></pre></div><ul>
+<li><code>REDIS_PASSWORD</code>：启用密码保护时设置</li>
+</ul>
+<hr>
+<h2 id="数据持久化卷管理">数据持久化：卷管理</h2>
+<h3 id="本地目录挂载">本地目录挂载</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v /host/data:/container/data <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  &lt;image&gt;
+</span></span></code></pre></div><ul>
+<li>优点：直接访问宿主机文件系统</li>
+<li>缺点：路径需手动创建，跨容器共享不便</li>
+</ul>
+<h3 id="命名卷推荐">命名卷（推荐）</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman volume create myvolume
+</span></span><span style="display:flex;"><span>podman run -d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -v myvolume:/container/data <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  &lt;image&gt;
+</span></span></code></pre></div><ul>
+<li>优点：支持多容器共享，独立于文件系统路径</li>
+<li>查看卷信息：<code>podman volume ls</code></li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：命名卷的数据在容器删除后仍保留，需手动清理。</p>
+</blockquote>
+<hr>
+<h2 id="端口映射与访问">端口映射与访问</h2>
+<table>
+  <thead>
+      <tr>
+          <th>数据库</th>
+          <th>默认端口</th>
+          <th>映射示例</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MySQL</td>
+          <td>3306</td>
+          <td><code>-p 3306:3306</code></td>
+          <td>客户端通过 <code>localhost:3306</code> 连接</td>
+      </tr>
+      <tr>
+          <td>PostgreSQL</td>
+          <td>5432</td>
+          <td><code>-p 5432:5432</code></td>
+          <td>与 MySQL 类似</td>
+      </tr>
+      <tr>
+          <td>MongoDB</td>
+          <td>27017</td>
+          <td><code>-p 27017:27017</code></td>
+          <td>需注意防火墙规则</td>
+      </tr>
+      <tr>
+          <td>Redis</td>
+          <td>6379</td>
+          <td><code>-p 6379:6379</code></td>
+          <td>默认无密码保护</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p><strong>冲突处理</strong>：若宿主机已有进程占用目标端口，需修改映射（如 <code>-p 3307:3306</code>）或终止占用进程。</p>
+</blockquote>
+<hr>
+<h2 id="日志查看与容器交互">日志查看与容器交互</h2>
+<h3 id="查看日志">查看日志</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman logs mysql-container
+</span></span></code></pre></div><ul>
+<li>实时查看：<code>podman logs -f mysql-container</code></li>
+</ul>
+<h3 id="进入容器">进入容器</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman exec -it mysql-container bash
+</span></span></code></pre></div><ul>
+<li>MySQL 客户端：<code>mysql -u root -p</code></li>
+<li>PostgreSQL 客户端：<code>psql -U postgres</code></li>
+</ul>
+<hr>
+<h2 id="容器管理">容器管理</h2>
+<h3 id="停止与删除">停止与删除</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman stop mysql-container
+</span></span><span style="display:flex;"><span>podman rm mysql-container
+</span></span></code></pre></div><ul>
+<li>强制删除：<code>podman rm -f &lt;container&gt;</code></li>
+</ul>
+<h3 id="清理所有停止容器">清理所有停止容器</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman rm <span style="color:#66d9ef">$(</span>podman ps -a -q<span style="color:#66d9ef">)</span>
+</span></span></code></pre></div><hr>
+<h2 id="高级配置与注意事项">高级配置与注意事项</h2>
+<h3 id="环境变量扩展">环境变量扩展</h3>
+<ul>
+<li>MySQL 支持 <code>MYSQL_MAX_CONNECTIONS</code> 等参数</li>
+<li>PostgreSQL 可通过 <code>POSTGRES_SHARED_BUFFERS</code> 调整内存配置</li>
+</ul>
+<h3 id="docker-compose-集成可选">Docker Compose 集成（可选）</h3>
+<p>若需管理多容器服务，可使用 Docker Compose（Podman 也支持 <code>podman play</code>）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">db</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">mysql:8.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">MYSQL_ROOT_PASSWORD</span>: <span style="color:#ae81ff">secret</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./data:/var/lib/mysql</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;3306:3306&#34;</span>
+</span></span></code></pre></div><blockquote>
+<p><strong>注意</strong>：<code>docker-compose</code> 与 <code>podman play</code> 的配置语法略有差异，需注意兼容性。</p>
+</blockquote>
+<h3 id="权限与安全">权限与安全</h3>
+<ul>
+<li>避免使用 <code>root</code> 用户运行容器（可通过 <code>--user</code> 指定）</li>
+<li>敏感信息（如密码）应通过环境变量传递，而非写入 Dockerfile</li>
+</ul>
+<hr>
+<h2 id="总结">总结</h2>
+<p>本文系统讲解了使用 Podman/Docker 启动常见数据库容器的完整流程，重点包括：</p>
+<ol>
+<li>通过 <code>-e</code> 环境变量配置数据库用户和密码</li>
+<li>使用 <code>-v</code> 挂载卷实现数据持久化（推荐命名卷）</li>
+<li>端口映射规则与常见数据库默认端口</li>
+<li>容器日志查看和交互方法</li>
+<li>容器生命周期管理（启动/停止/删除）</li>
+</ol>
+<blockquote>
+<p><strong>适用边界说明</strong>：本文基于 Podman 4.x 和 Docker 20.10 测试，部分旧版本参数可能略有差异。对于生产环境，建议结合 <code>docker-compose</code> 或 <code>kubernetes</code> 实现更复杂的编排。</p>
+</blockquote>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

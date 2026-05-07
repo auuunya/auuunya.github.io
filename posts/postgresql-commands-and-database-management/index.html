@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>PostgreSQL常用命令与数据库管理 | Inkgraph</title>
+    <meta name="description" content="PostgreSQL 常用命令与操作指南 概述 本文整理了 PostgreSQL 数据库连接、操作、备份恢复及用户管理的常用命令，涵盖数据表管理、事务处理及导入导出方法。适用于日常数据库维护、开发调试及自动化脚本编写场景。 数据库连接与基础操作 连接数据库 使用 psql 命令行工具连接 PostgreSQL 数据库： psql -U username -d …">
+    <link rel="canonical" href="//localhost:1313/posts/postgresql-commands-and-database-management/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="PostgreSQL常用命令与数据库管理 | Inkgraph">
+    <meta property="og:description" content="PostgreSQL 常用命令与操作指南 概述 本文整理了 PostgreSQL 数据库连接、操作、备份恢复及用户管理的常用命令，涵盖数据表管理、事务处理及导入导出方法。适用于日常数据库维护、开发调试及自动化脚本编写场景。 数据库连接与基础操作 连接数据库 使用 psql 命令行工具连接 PostgreSQL 数据库： psql -U username -d …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/postgresql-commands-and-database-management/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PostgreSQL常用命令与数据库管理 | Inkgraph">
+    <meta name="twitter:description" content="PostgreSQL 常用命令与操作指南 概述 本文整理了 PostgreSQL 数据库连接、操作、备份恢复及用户管理的常用命令，涵盖数据表管理、事务处理及导入导出方法。适用于日常数据库维护、开发调试及自动化脚本编写场景。 数据库连接与基础操作 连接数据库 使用 psql 命令行工具连接 PostgreSQL 数据库： psql -U username -d …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>PostgreSQL常用命令与数据库管理</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="postgresql-常用命令与操作指南">PostgreSQL 常用命令与操作指南</h1>
+<h2 id="概述">概述</h2>
+<p>本文整理了 PostgreSQL 数据库连接、操作、备份恢复及用户管理的常用命令，涵盖数据表管理、事务处理及导入导出方法。适用于日常数据库维护、开发调试及自动化脚本编写场景。</p>
+<hr>
+<h2 id="数据库连接与基础操作">数据库连接与基础操作</h2>
+<h3 id="连接数据库">连接数据库</h3>
+<p>使用 <code>psql</code> 命令行工具连接 PostgreSQL 数据库：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>psql -U username -d dbname
+</span></span></code></pre></div><p>若需指定主机和端口：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>psql -U username -h host -p port -d dbname
+</span></span></code></pre></div><h3 id="数据库管理">数据库管理</h3>
+<ul>
+<li><strong>创建数据库</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DATABASE</span> dbname;
+</span></span></code></pre></div></li>
+<li><strong>列出所有数据库</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">\</span>l
+</span></span></code></pre></div></li>
+<li><strong>删除数据库</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">DATABASE</span> dbname;
+</span></span></code></pre></div></li>
+<li><strong>切换数据库</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#66d9ef">c</span> dbname
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="数据表管理">数据表管理</h2>
+<h3 id="表结构操作">表结构操作</h3>
+<ul>
+<li><strong>查看所有表</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">\</span>dt
+</span></span></code></pre></div></li>
+<li><strong>创建表</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> (
+</span></span><span style="display:flex;"><span>  column1 datatype,
+</span></span><span style="display:flex;"><span>  column2 datatype
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div></li>
+<li><strong>查看表结构</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">\</span>d <span style="color:#66d9ef">table_name</span>
+</span></span></code></pre></div></li>
+<li><strong>修改表结构</strong>
+<ul>
+<li>添加列：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">ADD</span> <span style="color:#66d9ef">COLUMN</span> <span style="color:#66d9ef">column_name</span> datatype;
+</span></span></code></pre></div></li>
+<li>修改列类型：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">COLUMN</span> <span style="color:#66d9ef">column_name</span> <span style="color:#66d9ef">TYPE</span> new_datatype;
+</span></span></code></pre></div></li>
+<li>重命名表或列：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> old_table_name <span style="color:#66d9ef">RENAME</span> <span style="color:#66d9ef">TO</span> new_table_name;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">RENAME</span> <span style="color:#66d9ef">COLUMN</span> old_column <span style="color:#66d9ef">TO</span> new_column;
+</span></span></code></pre></div></li>
+</ul>
+</li>
+<li><strong>删除表</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span>;
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="数据操作">数据操作</h2>
+<h3 id="增删改查">增删改查</h3>
+<ul>
+<li><strong>插入数据</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">table_name</span> (column1, column2)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">VALUES</span> (value1, value2);
+</span></span></code></pre></div></li>
+<li><strong>查询数据</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> column1, column2 <span style="color:#66d9ef">FROM</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">WHERE</span> condition;
+</span></span></code></pre></div></li>
+<li><strong>更新数据</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">UPDATE</span> <span style="color:#66d9ef">table_name</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SET</span> column1 <span style="color:#f92672">=</span> value1, column2 <span style="color:#f92672">=</span> value2
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> condition;
+</span></span></code></pre></div></li>
+<li><strong>删除数据</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">DELETE</span> <span style="color:#66d9ef">FROM</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">WHERE</span> condition;
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="约束与索引">约束与索引</h2>
+<h3 id="添加约束">添加约束</h3>
+<ul>
+<li><strong>主键约束</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">ADD</span> <span style="color:#66d9ef">CONSTRAINT</span> <span style="color:#66d9ef">constraint_name</span> <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#66d9ef">column_name</span>);
+</span></span></code></pre></div></li>
+<li><strong>外键约束</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">ADD</span> <span style="color:#66d9ef">CONSTRAINT</span> <span style="color:#66d9ef">constraint_name</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FOREIGN</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#66d9ef">column_name</span>) <span style="color:#66d9ef">REFERENCES</span> other_table(other_column);
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="索引管理">索引管理</h3>
+<ul>
+<li><strong>创建索引</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">INDEX</span> index_name <span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">table_name</span> (<span style="color:#66d9ef">column_name</span>);
+</span></span></code></pre></div></li>
+<li><strong>删除索引</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">INDEX</span> index_name;
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="数据备份与恢复">数据备份与恢复</h2>
+<h3 id="导出数据库">导出数据库</h3>
+<p>使用 <code>pg_dump</code> 导出数据库到 SQL 文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pg_dump dbname &gt; dbname_backup.sql
+</span></span></code></pre></div><h3 id="恢复数据库">恢复数据库</h3>
+<ul>
+<li><strong>导入 SQL 文件</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>psql -U username -d dbname -f /path/to/backup.sql
+</span></span></code></pre></div></li>
+<li><strong>使用 pg_restore 恢复自定义格式备份</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pg_restore -U username -d dbname /path/to/backup.dump
+</span></span></code></pre></div></li>
+</ul>
+<h4 id="pg_restore-常用选项">pg_restore 常用选项</h4>
+<table>
+  <thead>
+      <tr>
+          <th>选项</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>-v</code></td>
+          <td>显示详细恢复过程</td>
+      </tr>
+      <tr>
+          <td><code>-j n</code></td>
+          <td>启用并行恢复（提升大文件恢复速度）</td>
+      </tr>
+      <tr>
+          <td><code>-s</code></td>
+          <td>仅恢复表结构</td>
+      </tr>
+      <tr>
+          <td><code>-a</code></td>
+          <td>仅恢复数据</td>
+      </tr>
+      <tr>
+          <td><code>--clean</code></td>
+          <td>删除目标数据库中已存在的对象后重建</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>注意事项</strong></p>
+<ul>
+<li><code>pg_restore</code> 仅适用于自定义格式（如 <code>.dump</code>），普通 SQL 文件需用 <code>psql</code> 恢复。</li>
+<li>恢复前需确保目标数据库已存在，或通过 <code>psql</code> 先创建。</li>
+</ul>
+<hr>
+<h2 id="用户管理">用户管理</h2>
+<h3 id="创建与授权">创建与授权</h3>
+<ul>
+<li><strong>创建用户</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">USER</span> username <span style="color:#66d9ef">WITH</span> PASSWORD <span style="color:#e6db74">&#39;password&#39;</span>;
+</span></span></code></pre></div></li>
+<li><strong>授予权限</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">GRANT</span> <span style="color:#66d9ef">ALL</span> <span style="color:#66d9ef">PRIVILEGES</span> <span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">DATABASE</span> dbname <span style="color:#66d9ef">TO</span> username;
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="删除用户">删除用户</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">USER</span> username;
+</span></span></code></pre></div><hr>
+<h2 id="事务处理">事务处理</h2>
+<ul>
+<li><strong>开启事务</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">BEGIN</span>;
+</span></span></code></pre></div></li>
+<li><strong>提交事务</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">COMMIT</span>;
+</span></span></code></pre></div></li>
+<li><strong>回滚事务</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ROLLBACK</span>;
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="其他实用命令">其他实用命令</h2>
+<ul>
+<li><strong>查看连接信息</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">\</span>conninfo
+</span></span></code></pre></div></li>
+<li><strong>查看 PostgreSQL 版本</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">version</span>();
+</span></span></code></pre></div></li>
+<li><strong>查看数据库配置</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SHOW</span> <span style="color:#66d9ef">ALL</span>;
+</span></span></code></pre></div></li>
+<li><strong>查询表所有数据</strong>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#66d9ef">table_name</span>;
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="导入-sql-文件的多种方式">导入 SQL 文件的多种方式</h2>
+<h3 id="1-命令行工具-psql">1. 命令行工具 <code>psql</code></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>psql -U postgres -d mydb -f /path/to/backup.sql
+</span></span></code></pre></div><h3 id="2-图形化工具-pgadmin">2. 图形化工具 <code>pgAdmin</code></h3>
+<ol>
+<li>连接数据库后，右键目标数据库 → <strong>Query Tool</strong></li>
+<li>点击 <strong>打开文件</strong> 图标加载 SQL 文件</li>
+<li>按 <strong>F5</strong> 执行脚本</li>
+</ol>
+<h3 id="3-恢复自定义格式备份">3. 恢复自定义格式备份</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pg_restore -U postgres -d mydb /path/to/backup.dump
+</span></span></code></pre></div><hr>
+<h2 id="注意事项与边界说明">注意事项与边界说明</h2>
+<ol>
+<li>
+<p><strong>权限问题</strong></p>
+<ul>
+<li>导入/恢复操作需使用具备足够权限的用户（如 <code>postgres</code>）。</li>
+<li>容器化部署时（如 Docker），需确保卷挂载路径权限正确（参考 <a href="#container-database">container-database</a> 相关配置）。</li>
+</ul>
+</li>
+<li>
+<p><strong>备份格式差异</strong></p>
+<ul>
+<li><code>.sql</code> 文件为纯文本格式，适合跨版本恢复；</li>
+<li><code>.dump</code> 文件为自定义格式，需用 <code>pg_restore</code> 操作，支持更复杂的恢复选项。</li>
+</ul>
+</li>
+<li>
+<p><strong>数据一致性</strong></p>
+<ul>
+<li>恢复时若目标数据库非空，使用 <code>--clean</code> 选项会删除已有对象，需提前备份。</li>
+</ul>
+</li>
+<li>
+<p><strong>容器环境适配</strong></p>
+<ul>
+<li>在容器中运行 PostgreSQL 时，需通过 <code>-v</code> 挂载数据卷，避免容器重启导致数据丢失（详见 <a href="#container-database">container-database</a>）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>通过上述命令和操作，可高效完成 PostgreSQL 的日常管理任务。具体场景下（如高并发、大表操作），建议结合索引优化、事务控制及定期备份策略，以保障数据安全与性能。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

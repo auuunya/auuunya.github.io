@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>虚拟机磁盘分区与Swap调整实战 | Inkgraph</title>
+    <meta name="description" content="VMware下扩展Ubuntu虚拟机根目录分区指南 概述 本文针对虚拟机磁盘空间不足场景，详细记录了通过调整分区表、交换分区和文件系统扩展Ubuntu虚拟机根目录的完整操作流程。核心目标是通过重新划分磁盘空间，实现根文件系统容量的扩展，同时确保交换分区的正常挂载。操作涉及分区表修改、UUID重用等高风险操作，务必提前备份整个虚拟机镜像。 核心操作流程 一、前 …">
+    <link rel="canonical" href="//localhost:1313/posts/disk-partition-swap-adjustment/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="虚拟机磁盘分区与Swap调整实战 | Inkgraph">
+    <meta property="og:description" content="VMware下扩展Ubuntu虚拟机根目录分区指南 概述 本文针对虚拟机磁盘空间不足场景，详细记录了通过调整分区表、交换分区和文件系统扩展Ubuntu虚拟机根目录的完整操作流程。核心目标是通过重新划分磁盘空间，实现根文件系统容量的扩展，同时确保交换分区的正常挂载。操作涉及分区表修改、UUID重用等高风险操作，务必提前备份整个虚拟机镜像。 核心操作流程 一、前 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/disk-partition-swap-adjustment/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="虚拟机磁盘分区与Swap调整实战 | Inkgraph">
+    <meta name="twitter:description" content="VMware下扩展Ubuntu虚拟机根目录分区指南 概述 本文针对虚拟机磁盘空间不足场景，详细记录了通过调整分区表、交换分区和文件系统扩展Ubuntu虚拟机根目录的完整操作流程。核心目标是通过重新划分磁盘空间，实现根文件系统容量的扩展，同时确保交换分区的正常挂载。操作涉及分区表修改、UUID重用等高风险操作，务必提前备份整个虚拟机镜像。 核心操作流程 一、前 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>虚拟机磁盘分区与Swap调整实战</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="vmware下扩展ubuntu虚拟机根目录分区指南">VMware下扩展Ubuntu虚拟机根目录分区指南</h1>
+<h2 id="概述">概述</h2>
+<p>本文针对虚拟机磁盘空间不足场景，详细记录了通过调整分区表、交换分区和文件系统扩展Ubuntu虚拟机根目录的完整操作流程。核心目标是通过重新划分磁盘空间，实现根文件系统容量的扩展，同时确保交换分区的正常挂载。操作涉及分区表修改、UUID重用等高风险操作，<strong>务必提前备份整个虚拟机镜像</strong>。</p>
+<h2 id="核心操作流程">核心操作流程</h2>
+<h3 id="一前期准备">一、前期准备</h3>
+<ol>
+<li>
+<p><strong>确认磁盘信息</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>df -h           <span style="color:#75715e"># 查看当前文件系统使用情况</span>
+</span></span><span style="display:flex;"><span>fdisk -l /dev/sda  <span style="color:#75715e"># 列出当前分区表结构</span>
+</span></span></code></pre></div><p>记录交换分区（swap）的Blocks数值（如示例中的1046528），若交换分区与根分区位于不同磁盘则无需记录。</p>
+</li>
+<li>
+<p><strong>虚拟机磁盘扩容</strong></p>
+<ul>
+<li>在VMware虚拟机设置中，通过&quot;硬盘&quot;-&gt;&ldquo;实用工具&quot;扩展磁盘最大容量（如从10.7GB扩展至15GB）</li>
+<li><strong>重要提示</strong>：虚拟机需处于关机状态才能修改磁盘大小</li>
+</ul>
+</li>
+</ol>
+<h3 id="二分区表调整">二、分区表调整</h3>
+<ol>
+<li>
+<p><strong>关闭系统并进入救援模式</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>shutdown -h now  <span style="color:#75715e"># 关机</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动时进入救援模式或Live CD环境</span>
+</span></span></code></pre></div></li>
+<li>
+<p><strong>分区表操作</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>fdisk /dev/sda
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 操作步骤：</span>
+</span></span><span style="display:flex;"><span>1. 输入 p 查看当前分区表
+</span></span><span style="display:flex;"><span>2. 输入 d 删除原有分区（先删除 sda1 再删除 sda2）
+</span></span><span style="display:flex;"><span>3. 输入 n 创建新主分区（sda1 从 <span style="color:#ae81ff">2048</span> 起始）
+</span></span><span style="display:flex;"><span>4. 输入 n 创建新主分区（sda2 作为交换分区）
+</span></span><span style="display:flex;"><span>5. 输入 t 修改分区类型（将 sda2 类型改为 82）
+</span></span><span style="display:flex;"><span>6. 输入 w 保存分区表
+</span></span></code></pre></div></li>
+<li>
+<p><strong>内核识别新分区</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>partprobe  <span style="color:#75715e"># 或 kpartx -a /dev/sda</span>
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="三交换分区处理">三、交换分区处理</h3>
+<ol>
+<li>
+<p><strong>获取原始UUID</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;/swap/ { print $1 }&#39;</span> /etc/fstab
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 示例输出：UUID=8bb62351-4436-47df-92fe-af2865f03461</span>
+</span></span></code></pre></div></li>
+<li>
+<p><strong>交换分区重建</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>swapoff -a  <span style="color:#75715e"># 关闭所有swap</span>
+</span></span><span style="display:flex;"><span>dd <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>/dev/zero of<span style="color:#f92672">=</span>/dev/sda2 bs<span style="color:#f92672">=</span>1M count<span style="color:#f92672">=</span><span style="color:#ae81ff">512</span>  <span style="color:#75715e"># 清空分区</span>
+</span></span><span style="display:flex;"><span>mkswap -U &lt;UUID&gt; /dev/sda2  <span style="color:#75715e"># 用原始UUID重建swap</span>
+</span></span><span style="display:flex;"><span>swapon -a  <span style="color:#75715e"># 挂载新swap</span>
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="四文件系统扩展">四、文件系统扩展</h3>
+<ol>
+<li>
+<p><strong>在线扩容文件系统</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resize2fs /dev/sda1  <span style="color:#75715e"># 自动扩展到分区最大容量</span>
+</span></span></code></pre></div></li>
+<li>
+<p><strong>验证扩容结果</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>df -h  <span style="color:#75715e"># 观察根分区容量变化</span>
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="关键注意事项">关键注意事项</h2>
+<ol>
+<li>
+<p><strong>风险控制</strong></p>
+<ul>
+<li>分区表修改前必须备份整个虚拟机镜像</li>
+<li>操作过程中避免意外断电或中断</li>
+<li>确保虚拟机处于关机状态进行磁盘扩容</li>
+</ul>
+</li>
+<li>
+<p><strong>UUID处理方案</strong></p>
+<ul>
+<li><strong>方案一</strong>：直接覆盖新分区UUID（如文中方法）</li>
+<li><strong>方案二</strong>：修改/etc/fstab文件，写入新UUID</li>
+<li>两种方案均需确保swap分区重建后验证：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>swapon --show  <span style="color:#75715e"># 检查swap是否正常挂载</span>
+</span></span></code></pre></div></li>
+</ul>
+</li>
+<li>
+<p><strong>兼容性说明</strong></p>
+<ul>
+<li>本方案适用于VMware虚拟化环境，物理机操作需谨慎</li>
+<li>若使用LVM逻辑卷管理，可采用lvextend等替代方案</li>
+<li>resize2fs工具要求文件系统类型为ext2/ext3/ext4</li>
+</ul>
+</li>
+<li>
+<p><strong>版本差异</strong></p>
+<ul>
+<li>不同Linux发行版的swapoff/mkswap工具可能存在参数差异</li>
+<li>部分系统可能需要安装<code>util-linux</code>包获取完整工具链</li>
+</ul>
+</li>
+</ol>
+<h2 id="操作验证">操作验证</h2>
+<p>完成所有操作后，建议进行以下验证：</p>
+<ol>
+<li>检查磁盘使用情况：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>df -hT  <span style="color:#75715e"># 查看文件系统类型和容量</span>
+</span></span></code></pre></div></li>
+<li>验证swap状态：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>free -m  <span style="color:#75715e"># 确认swap空间已恢复</span>
+</span></span></code></pre></div></li>
+<li>系统稳定性测试：
+<ul>
+<li>进行内存密集型操作验证swap功能</li>
+<li>观察系统运行是否出现I/O错误</li>
+</ul>
+</li>
+</ol>
+<h2 id="附录常见问题">附录：常见问题</h2>
+<p><strong>Q1：扩容后系统无法启动？</strong></p>
+<ul>
+<li>检查BIOS/UEFI中磁盘引导顺序</li>
+<li>确认MBR引导记录未被破坏</li>
+<li>使用Live CD检查分区表结构</li>
+</ul>
+<p><strong>Q2：resize2fs报错&quot;Filesystem is mounted&rdquo;</strong></p>
+<ul>
+<li>确保文件系统未被挂载（需进入救援模式）</li>
+<li>或使用<code>resize2fs -p /dev/sda1</code>强制在线扩容</li>
+</ul>
+<p><strong>Q3：新swap分区未生效？</strong></p>
+<ul>
+<li>检查/etc/fstab是否包含新UUID</li>
+<li>验证<code>swapon --all</code>命令执行结果</li>
+<li>使用<code>dmesg | grep swap</code>查看内核日志</li>
+</ul>
+<p>本操作指南基于VMware虚拟化环境和Ubuntu系统验证，实际操作时请根据具体环境调整参数。建议在测试环境中先行演练，确保掌握操作流程后再进行生产环境操作。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

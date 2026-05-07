@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>理解JavaScript科学计数法与函数机制 | Inkgraph</title>
+    <meta name="description" content="JavaScript 核心语法与运行机制解析 概述 本文聚焦 JavaScript 语言中基础语法特性的解析，涵盖科学计数法表示、余数运算符、特殊数值符号（Infinity/NaN）的语义，以及函数定义方式、闭包机制、高阶函数特性及原型链继承原理等核心概念。 核心概念 数值表示与运算符 科学计数法 采用 基数e指数 格式，如 10e2 表示 …">
+    <link rel="canonical" href="//localhost:1313/posts/javascript-science-notation-functions/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="理解JavaScript科学计数法与函数机制 | Inkgraph">
+    <meta property="og:description" content="JavaScript 核心语法与运行机制解析 概述 本文聚焦 JavaScript 语言中基础语法特性的解析，涵盖科学计数法表示、余数运算符、特殊数值符号（Infinity/NaN）的语义，以及函数定义方式、闭包机制、高阶函数特性及原型链继承原理等核心概念。 核心概念 数值表示与运算符 科学计数法 采用 基数e指数 格式，如 10e2 表示 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/javascript-science-notation-functions/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="理解JavaScript科学计数法与函数机制 | Inkgraph">
+    <meta name="twitter:description" content="JavaScript 核心语法与运行机制解析 概述 本文聚焦 JavaScript 语言中基础语法特性的解析，涵盖科学计数法表示、余数运算符、特殊数值符号（Infinity/NaN）的语义，以及函数定义方式、闭包机制、高阶函数特性及原型链继承原理等核心概念。 核心概念 数值表示与运算符 科学计数法 采用 基数e指数 格式，如 10e2 表示 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>理解JavaScript科学计数法与函数机制</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="javascript-核心语法与运行机制解析">JavaScript 核心语法与运行机制解析</h1>
+<h2 id="概述">概述</h2>
+<p>本文聚焦 JavaScript 语言中基础语法特性的解析，涵盖科学计数法表示、余数运算符、特殊数值符号（Infinity/NaN）的语义，以及函数定义方式、闭包机制、高阶函数特性及原型链继承原理等核心概念。</p>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="数值表示与运算符">数值表示与运算符</h3>
+<ol>
+<li>
+<p><strong>科学计数法</strong><br>
+采用 <code>基数e指数</code> 格式，如 <code>10e2</code> 表示 1000，<code>15e5</code> 表示 1,500,000。指数部分的 <code>e</code> 后跟的数字表示 10 的幂次。</p>
+</li>
+<li>
+<p><strong>余数运算符 <code>%</code></strong><br>
+计算 <code>X % Y</code> 时，结果为 <code>X</code> 除以 <code>Y</code> 的余数（即 <code>X - Y * Math.floor(X/Y)</code>）。该运算符在 JavaScript 中也被称为 modulo 运算。</p>
+</li>
+<li>
+<p><strong>特殊数值符号</strong></p>
+<ul>
+<li><code>Infinity</code>：表示正无穷大（如 <code>1 / 0</code> 的结果）</li>
+<li><code>-Infinity</code>：表示负无穷大（如 <code>-1 / 0</code> 的结果）</li>
+<li><code>NaN</code>：表示“非数字”（Not-a-Number），如 <code>0 / 0</code> 的结果</li>
+<li><code>\n</code>：换行符，<code>\t</code>：制表符（属于字符串转义序列）</li>
+</ul>
+</li>
+</ol>
+<h3 id="函数定义与作用域">函数定义与作用域</h3>
+<ol>
+<li>
+<p><strong>函数定义方式</strong><br>
+JavaScript 支持三种主要函数定义方式：</p>
+<ul>
+<li>函数表达式：<code>const funcName = function() {}</code></li>
+<li>函数声明：<code>function funcName() {}</code></li>
+<li>箭头函数：<code>const funcName = () =&gt; {}</code></li>
+</ul>
+</li>
+<li>
+<p><strong>作用域与闭包</strong></p>
+<ul>
+<li>函数内部的局部变量在每次调用时重新创建，不同调用之间互不影响。</li>
+<li><strong>闭包</strong>：函数能够引用并保留对外部作用域变量的访问权限。例如，通过 <code>var</code> 声明的变量会进入最近的函数作用域或全局作用域，而闭包通过捕获外部作用域的变量实现数据封装。</li>
+</ul>
+</li>
+<li>
+<p><strong>高阶函数</strong><br>
+以函数为参数或返回函数的操作称为高阶函数。例如，<code>Array.prototype.map</code> 接收函数作为参数，<code>setTimeout</code> 返回一个定时器函数。</p>
+</li>
+</ol>
+<h3 id="原型链继承">原型链继承</h3>
+<ol>
+<li>
+<p><strong>原型对象机制</strong><br>
+每个对象通过 <code>__proto__</code> 属性链接到其原型对象，原型对象本身也有原型，最终指向 <code>Object.prototype</code>。例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>String.<span style="color:#a6e22e">prototype</span> <span style="color:#f92672">===</span> Object.<span style="color:#a6e22e">getPrototypeOf</span>(<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>Object.<span style="color:#a6e22e">prototype</span> <span style="color:#f92672">===</span> Object.<span style="color:#a6e22e">getPrototypeOf</span>({})
+</span></span></code></pre></div></li>
+<li>
+<p><strong>原型链查找规则</strong><br>
+当访问对象属性时，若对象自身无该属性，则沿 <code>__proto__</code> 链向上查找，直到 <code>Object.prototype</code> 或 <code>null</code>。</p>
+</li>
+</ol>
+<h2 id="工作原理与注意事项">工作原理与注意事项</h2>
+<h3 id="闭包的内存管理">闭包的内存管理</h3>
+<p>闭包会保留对外部作用域变量的引用，可能导致内存泄漏。例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">createCounter</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> () =&gt; { <span style="color:#a6e22e">count</span><span style="color:#f92672">++</span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>每次调用 <code>createCounter()</code> 会返回一个闭包函数，该函数持有 <code>count</code> 变量的引用，需手动释放或通过垃圾回收机制处理。</p>
+<h3 id="原型链的性能影响">原型链的性能影响</h3>
+<p>原型链查找的层级越多，访问属性的耗时越高。可通过 <code>Object.create(null)</code> 创建无原型的对象，或使用 <code>Object.defineProperty</code> 设置 <code>enumerable: false</code> 优化属性访问。</p>
+<h3 id="特殊值的判断">特殊值的判断</h3>
+<ul>
+<li><code>NaN</code> 的判断需使用 <code>isNaN()</code> 或 <code>Number.isNaN()</code>，直接使用 <code>===</code> 会失败（<code>NaN === NaN</code> 返回 <code>false</code>）。</li>
+<li><code>Infinity</code> 与 <code>-Infinity</code> 可通过 <code>isFinite()</code> 判断，如 <code>isFinite(1 / 0)</code> 返回 <code>false</code>。</li>
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<ol>
+<li>
+<p><strong><code>var</code> 与 <code>let/const</code> 的作用域差异</strong><br>
+<code>var</code> 声明的变量存在变量提升（hoisting），而 <code>let/const</code> 不存在此特性，且作用域限定在块级（block scope）。</p>
+</li>
+<li>
+<p><strong>原型链污染风险</strong><br>
+若通过 <code>Object.prototype</code> 添加属性（如 <code>Object.prototype.myProp = 42</code>），所有对象都会继承该属性，可能导致不可预期的行为。</p>
+</li>
+<li>
+<p><strong>箭头函数与 <code>this</code> 绑定</strong><br>
+箭头函数无自己的 <code>this</code>，其 <code>this</code> 指向定义时的上下文，而非调用时的上下文。适用于回调函数中保持 <code>this</code> 指向，但不适合需要动态绑定 <code>this</code> 的场景。</p>
+</li>
+</ol>
+<h2 id="总结">总结</h2>
+<p>JavaScript 的语法特性围绕动态作用域、原型继承和函数式编程展开。理解科学计数法、特殊数值符号、闭包机制及原型链原理，是编写高效、可维护代码的基础。实际开发中需注意闭包的内存管理、原型链的性能影响，以及 <code>var</code> 与 <code>let/const</code> 的作用域差异，以避免常见陷阱。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

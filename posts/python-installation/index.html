@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Python 源码安装与多版本管理实战 | Inkgraph</title>
+    <meta name="description" content="从源码编译安装 Python 及多版本管理指南 概述 本文系统讲解如何在 Linux 系统中从源码编译安装 Python，并提供多版本管理方案。核心问题包括：如何避免覆盖系统自带 Python、如何通过不同工具管理多个版本、以及如何配合 pip 管理依赖包。 安装流程详解 1. 准备工作 依赖安装（根据发行版选择）： Ubuntu/Debian： sudo …">
+    <link rel="canonical" href="//localhost:1313/posts/python-installation/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="Python 源码安装与多版本管理实战 | Inkgraph">
+    <meta property="og:description" content="从源码编译安装 Python 及多版本管理指南 概述 本文系统讲解如何在 Linux 系统中从源码编译安装 Python，并提供多版本管理方案。核心问题包括：如何避免覆盖系统自带 Python、如何通过不同工具管理多个版本、以及如何配合 pip 管理依赖包。 安装流程详解 1. 准备工作 依赖安装（根据发行版选择）： Ubuntu/Debian： sudo …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/python-installation/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Python 源码安装与多版本管理实战 | Inkgraph">
+    <meta name="twitter:description" content="从源码编译安装 Python 及多版本管理指南 概述 本文系统讲解如何在 Linux 系统中从源码编译安装 Python，并提供多版本管理方案。核心问题包括：如何避免覆盖系统自带 Python、如何通过不同工具管理多个版本、以及如何配合 pip 管理依赖包。 安装流程详解 1. 准备工作 依赖安装（根据发行版选择）： Ubuntu/Debian： sudo …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>Python 源码安装与多版本管理实战</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="从源码编译安装-python-及多版本管理指南">从源码编译安装 Python 及多版本管理指南</h1>
+<h2 id="概述">概述</h2>
+<p>本文系统讲解如何在 Linux 系统中从源码编译安装 Python，并提供多版本管理方案。核心问题包括：如何避免覆盖系统自带 Python、如何通过不同工具管理多个版本、以及如何配合 pip 管理依赖包。</p>
+<h2 id="安装流程详解">安装流程详解</h2>
+<h3 id="1-准备工作">1. 准备工作</h3>
+<p><strong>依赖安装</strong>（根据发行版选择）：</p>
+<ul>
+<li>Ubuntu/Debian：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget curl llvm tk-dev libbz2-dev liblzma-dev
+</span></span></code></pre></div></li>
+<li>CentOS/RHEL：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo yum groupinstall <span style="color:#e6db74">&#34;Development Tools&#34;</span>
+</span></span><span style="display:flex;"><span>sudo yum install -y zlib-devel ncurses-devel gdbm-devel nss-devel openssl-devel readline-devel ffi-devel sqlite-devel wget curl llvm tk-devel bzip2-devel xz-devel
+</span></span></code></pre></div></li>
+</ul>
+<p><strong>下载源码包</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://www.python.org/ftp/python/3.x.x/Python-3.x.x.tgz
+</span></span><span style="display:flex;"><span>tar -xvzf Python-3.x.x.tgz
+</span></span><span style="display:flex;"><span>cd Python-3.x.x
+</span></span></code></pre></div><h3 id="2-编译安装">2. 编译安装</h3>
+<p><strong>配置选项</strong>：</p>
+<ul>
+<li>默认安装：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./configure --enable-optimizations
+</span></span></code></pre></div></li>
+<li>自定义路径（示例）：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./configure --prefix<span style="color:#f92672">=</span>/opt/python3.x --enable-optimizations --with-openssl<span style="color:#f92672">=</span>/usr/local/ssl
+</span></span></code></pre></div></li>
+</ul>
+<p><strong>编译与安装</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make -j <span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>sudo make altinstall  <span style="color:#75715e"># 使用 altinstall 避免覆盖系统自带 Python</span>
+</span></span></code></pre></div><p><strong>验证安装</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3.x --version
+</span></span></code></pre></div><h2 id="多版本管理方案">多版本管理方案</h2>
+<h3 id="方案一手动软链接管理">方案一：手动软链接管理</h3>
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>删除现有软链接：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo rm /usr/bin/python
+</span></span></code></pre></div></li>
+<li>创建新链接（以 Python 3.9 为例）：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ln -s /usr/bin/python3.9 /usr/bin/python
+</span></span></code></pre></div></li>
+</ol>
+<blockquote>
+<p>注意：此方法需谨慎操作，错误的软链接可能导致系统命令失效。</p>
+</blockquote>
+<h3 id="方案二update-alternatives-工具">方案二：update-alternatives 工具</h3>
+<p><strong>管理流程</strong>：</p>
+<ol>
+<li>
+<p>添加新版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p><em>数字 <code>2</code> 表示优先级，数值越大优先级越高</em></p>
+</li>
+<li>
+<p>切换版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo update-alternatives --config python
+</span></span></code></pre></div></li>
+<li>
+<p>移除旧版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo update-alternatives --remove python /usr/bin/python2.7
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="方案三pyenv-工具">方案三：pyenv 工具</h3>
+<p><strong>安装与配置</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl https://pyenv.run | bash
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;export PATH=&#34;$HOME/.pyenv/bin:$PATH&#34;&#39;</span> &gt;&gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;eval &#34;$(pyenv init --path)&#34;&#39;</span> &gt;&gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;eval &#34;$(pyenv init -)&#34;&#39;</span> &gt;&gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>source ~/.bashrc
+</span></span></code></pre></div><p><strong>版本管理</strong>：</p>
+<ul>
+<li>安装指定版本：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyenv install 3.9.10
+</span></span><span style="display:flex;"><span>pyenv install 3.8.12
+</span></span></code></pre></div></li>
+<li>切换版本：
+<ul>
+<li>全局生效：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyenv global 3.9.10
+</span></span></code></pre></div></li>
+<li>项目目录生效：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyenv local 3.8.12
+</span></span></code></pre></div></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>pyenv 会自动管理环境变量，推荐用于开发环境。</p>
+</blockquote>
+<h2 id="pip-包管理注意事项">pip 包管理注意事项</h2>
+<p><strong>安装 pip</strong>（若未自动安装）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3.x -m ensurepip --upgrade
+</span></span></code></pre></div><p><strong>升级 pip</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3.x -m pip install --upgrade pip
+</span></span></code></pre></div><p><strong>安装包时指定 Python 版本</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3.x -m pip install &lt;package_name&gt;
+</span></span></code></pre></div><p><strong>镜像源配置</strong>（如需绕过 SSL 限制）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m pip install package_name -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+</span></span></code></pre></div><h2 id="适用场景对比">适用场景对比</h2>
+<table>
+  <thead>
+      <tr>
+          <th>管理方式</th>
+          <th>适用场景</th>
+          <th>优点</th>
+          <th>注意事项</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>软链接</td>
+          <td>简单场景，单版本切换</td>
+          <td>操作直接</td>
+          <td>高风险，可能影响系统命令</td>
+      </tr>
+      <tr>
+          <td>update-alternatives</td>
+          <td>系统级多版本管理</td>
+          <td>原生工具，稳定性高</td>
+          <td>需手动维护版本列表</td>
+      </tr>
+      <tr>
+          <td>pyenv</td>
+          <td>开发环境、多版本并行需求</td>
+          <td>隔离性好，易用性强</td>
+          <td>需配置 Shell 环境</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="常见问题">常见问题</h2>
+<ol>
+<li>
+<p><strong>为何使用 <code>altinstall</code> 而非 <code>install</code>？</strong><br>
+<code>make install</code> 会覆盖系统默认的 <code>python</code> 命令（通常为 Python 2），而 <code>altinstall</code> 仅安装 <code>python3.x</code> 等新版本，避免冲突。</p>
+</li>
+<li>
+<p><strong>pyenv 与系统自带 Python 冲突？</strong><br>
+pyenv 通过修改 PATH 环境变量实现版本隔离，不会影响系统自带版本，但需确保 <code>~/.bashrc</code> 配置正确。</p>
+</li>
+<li>
+<p><strong>如何查看已安装版本？</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls /usr/bin/python*
+</span></span></code></pre></div></li>
+<li>
+<p><strong>pip 安装包时提示版本不匹配？</strong><br>
+确保使用 <code>python3.x -m pip</code> 显式指定 Python 解释器路径，避免使用全局 pip。</p>
+</li>
+</ol>
+<h2 id="总结">总结</h2>
+<p>从源码编译安装 Python 是掌握底层原理的有效方式，而多版本管理工具（如 pyenv）则能显著提升开发效率。根据实际需求选择管理方案：系统级操作推荐 <code>update-alternatives</code>，开发环境优先使用 <code>pyenv</code>。注意保持各版本 pip 工具的独立性，避免依赖混乱。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Nessus 安装与配置实战 | Inkgraph</title>
+    <meta name="description" content="Nessus 安装与配置指南（Windows/Linux） 概述 Nessus 是一款广泛使用的漏洞扫描工具，用于检测网络中的安全风险。本文详细记录了在 Windows 和 Linux 系统上安装 Nessus 的完整流程，涵盖从软件下载、插件激活到服务配置的关键操作步骤，适用于需要部署安全扫描工具的场景。 核心操作流程 1. 下载与安装 Windows 从 …">
+    <link rel="canonical" href="//localhost:1313/posts/nessus-installation-guide/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="Nessus 安装与配置实战 | Inkgraph">
+    <meta property="og:description" content="Nessus 安装与配置指南（Windows/Linux） 概述 Nessus 是一款广泛使用的漏洞扫描工具，用于检测网络中的安全风险。本文详细记录了在 Windows 和 Linux 系统上安装 Nessus 的完整流程，涵盖从软件下载、插件激活到服务配置的关键操作步骤，适用于需要部署安全扫描工具的场景。 核心操作流程 1. 下载与安装 Windows 从 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/nessus-installation-guide/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Nessus 安装与配置实战 | Inkgraph">
+    <meta name="twitter:description" content="Nessus 安装与配置指南（Windows/Linux） 概述 Nessus 是一款广泛使用的漏洞扫描工具，用于检测网络中的安全风险。本文详细记录了在 Windows 和 Linux 系统上安装 Nessus 的完整流程，涵盖从软件下载、插件激活到服务配置的关键操作步骤，适用于需要部署安全扫描工具的场景。 核心操作流程 1. 下载与安装 Windows 从 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>Nessus 安装与配置实战</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="nessus-安装与配置指南windowslinux">Nessus 安装与配置指南（Windows/Linux）</h1>
+<h2 id="概述">概述</h2>
+<p>Nessus 是一款广泛使用的漏洞扫描工具，用于检测网络中的安全风险。本文详细记录了在 Windows 和 Linux 系统上安装 Nessus 的完整流程，涵盖从软件下载、插件激活到服务配置的关键操作步骤，适用于需要部署安全扫描工具的场景。</p>
+<hr>
+<h2 id="核心操作流程">核心操作流程</h2>
+<h3 id="1-下载与安装">1. 下载与安装</h3>
+<p><strong>Windows</strong></p>
+<ul>
+<li>从 <a href="https://www.tenable.com/downloads/nessus">Tenable 官网</a> 下载对应版本的安装包。</li>
+<li>安装时选择空目录作为安装路径，避免路径中包含空格或特殊字符。</li>
+</ul>
+<p><strong>Linux</strong></p>
+<ul>
+<li>使用 <code>dpkg -i &lt;安装包路径&gt;</code> 命令安装，默认路径为 <code>/opt/nessus</code>。</li>
+</ul>
+<hr>
+<h3 id="2-初始化配置">2. 初始化配置</h3>
+<p>安装完成后，通过浏览器访问 <code>https://127.0.0.1:8834</code>，按以下步骤操作：</p>
+<ol>
+<li>点击 <strong>Connect via SSL</strong>，选择 <strong>Managed scanner</strong>，继续下一步。</li>
+<li>选择 <strong>Tenable Security Center</strong> 作为管理平台。</li>
+<li>设置管理员账号和密码，提交后进入控制台。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：首次登录后可能无法直接添加扫描任务，需完成插件激活流程。</p>
+</blockquote>
+<hr>
+<h3 id="3-获取授权信息">3. 获取授权信息</h3>
+<p><strong>Challenge Code</strong></p>
+<ul>
+<li><strong>Windows</strong>：以管理员身份运行 CMD，进入安装目录，执行 <code>./nessuscli fetch --challenge</code>。</li>
+<li><strong>Linux</strong>：切换到 <code>/opt/nessus/sbin</code>，运行相同命令。</li>
+<li>记录生成的 Challenge Code（如 <code>ABCDE12345</code>）。</li>
+</ul>
+<p><strong>Activation Code</strong></p>
+<ul>
+<li>访问 <a href="https://zh-cn.tenable.com/products/nessus/nessus-essentials">Nessus Essentials 注册页</a>，填写邮箱获取激活码。</li>
+<li>邮箱需能接收邮件，否则无法完成后续步骤。</li>
+</ul>
+<hr>
+<h3 id="4-下载与安装插件">4. 下载与安装插件</h3>
+<ol>
+<li>访问 <a href="https://plugins.nessus.org/v2/offline.php">Nessus 插件下载页</a>。</li>
+<li>输入 Challenge Code 和 Activation Code，提交后下载插件包（如 <code>all-2.0.tar.gz</code>）及 license 文件。</li>
+<li><strong>停止 Nessus 服务</strong>：
+<ul>
+<li>Windows: <code>net stop &quot;Tenable Nessus&quot;</code></li>
+<li>Linux: <code>systemctl stop nessus</code></li>
+</ul>
+</li>
+<li>执行插件安装：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./nessuscli update ./all-2.0.tar.gz
+</span></span></code></pre></div>记录安装输出中的 <strong>数字编号</strong>（如 <code>202411212059</code>）。</li>
+</ol>
+<hr>
+<h3 id="5-配置插件信息">5. 配置插件信息</h3>
+<p><strong>Windows</strong></p>
+<ul>
+<li>在任意位置新建 <code>plugin_feed_info.inc</code> 文件，内容如下：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">PLUGIN_SET</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;202411212059&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PLUGIN_FEED</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ProfessionalFeed (Direct)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PLUGIN_FEED_TRANSPORT</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Tenable Network Security Lightning&#34;</span>
+</span></span></code></pre></div></li>
+<li>将文件复制到以下路径：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>&lt;Nessus安装目录&gt;\nessus\plugin_feed_info.inc
+</span></span><span style="display:flex;"><span>&lt;Nessus安装目录&gt;\nessus\plugins\plugin_feed_info.inc
+</span></span></code></pre></div></li>
+</ul>
+<p><strong>Linux</strong></p>
+<ul>
+<li>编辑 <code>/opt/nessus/var/nessus/plugin_feed_info.inc</code>，内容同上。</li>
+<li>执行以下命令复制文件：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp /opt/nessus/var/nessus/plugin_feed_info.inc /opt/nessus/lib/nessus/plugins/plugin_feed_info.inc
+</span></span><span style="display:flex;"><span>cp /opt/nessus/var/nessus/plugin_feed_info.inc /opt/nessus/var/nessus/.plugin_feed_info.inc
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h3 id="6-锁定插件文件">6. 锁定插件文件</h3>
+<p><strong>Windows</strong></p>
+<ul>
+<li>使用 <code>attrib</code> 命令锁定插件目录：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span>attrib +s +r +h <span style="color:#e6db74">&#34;D:\nessus\plugins\*.*&#34;</span>
+</span></span><span style="display:flex;"><span>attrib -s -r -h <span style="color:#e6db74">&#34;D:\nessus\nessus\plugins\plugin_feed_info.inc&#34;</span>
+</span></span><span style="display:flex;"><span>attrib +s +r +h <span style="color:#e6db74">&#34;D:\nessus\nessus\plugin_feed_info.inc&#34;</span>
+</span></span></code></pre></div></li>
+</ul>
+<p><strong>Linux</strong></p>
+<ul>
+<li>使用 <code>chattr</code> 命令锁定文件：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chattr +i /opt/nessus/var/nessus/plugin_feed_info.inc
+</span></span><span style="display:flex;"><span>chattr +i -R /opt/nessus/lib/nessus/plugins
+</span></span><span style="display:flex;"><span>chattr -i /opt/nessus/lib/nessus/plugins/plugin_feed_info.inc
+</span></span><span style="display:flex;"><span>chattr -i /opt/nessus/lib/nessus/plugins
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h3 id="7-启动服务与验证">7. 启动服务与验证</h3>
+<p><strong>Windows</strong></p>
+<ul>
+<li>启动服务：<code>net start &quot;Tenable Nessus&quot;</code></li>
+</ul>
+<p><strong>Linux</strong></p>
+<ul>
+<li>启动服务：<code>systemctl start nessus</code></li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：若安装后仍无法添加扫描任务，需在控制台保存配置后刷新页面，等待插件更新完成。</p>
+</blockquote>
+<hr>
+<h2 id="常见问题与注意事项">常见问题与注意事项</h2>
+<ol>
+<li>
+<p><strong>插件更新失败</strong></p>
+<ul>
+<li>确保 <code>plugin_feed_info.inc</code> 文件路径正确且权限设置无误。</li>
+<li>检查网络连接，插件下载需访问 <code>plugins.nessus.org</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>服务启动异常</strong></p>
+<ul>
+<li>Linux 系统需确认 <code>systemd</code> 服务配置正确，可运行 <code>systemctl status nessus</code> 查看日志。</li>
+</ul>
+</li>
+<li>
+<p><strong>破解版功能限制</strong></p>
+<ul>
+<li>部分破解版本可能禁用扫描功能，需通过 <code>nessuscli fetch --register-offline nessus.license</code> 注册 license 文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>文件锁定冲突</strong></p>
+<ul>
+<li>Linux 环境中，若 <code>chattr</code> 命令不可用，需安装 <code>e2fsprogs</code> 工具包。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="总结">总结</h2>
+<p>Nessus 的安装流程涉及多个关键步骤，包括授权信息获取、插件激活及配置文件锁定。本文基于实际操作经验整理，适用于 Windows 和 Linux 系统，但具体路径和命令需根据实际安装版本调整。若遇到功能限制或配置问题，建议参考官方文档或联系 Tenable 技术支持。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

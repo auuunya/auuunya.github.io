@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Gravatar 头像服务参数详解 | Inkgraph</title>
+    <meta name="description" content="Gravatar：全球通用头像服务的使用方法与参数说明 概述 Gravatar（Globally Recognized Avatar）是全球通用头像服务，通过统一的HTTP接口为用户提供随机生成的头像图像。其核心价值在于：用户只需在支持Gravatar的平台注册并上传头像后，通过关联的邮箱地址即可在任意支持该服务的网站自动显示个性化头像。 核心概念 …">
+    <link rel="canonical" href="//localhost:1313/posts/gravatar/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="Gravatar 头像服务参数详解 | Inkgraph">
+    <meta property="og:description" content="Gravatar：全球通用头像服务的使用方法与参数说明 概述 Gravatar（Globally Recognized Avatar）是全球通用头像服务，通过统一的HTTP接口为用户提供随机生成的头像图像。其核心价值在于：用户只需在支持Gravatar的平台注册并上传头像后，通过关联的邮箱地址即可在任意支持该服务的网站自动显示个性化头像。 核心概念 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/gravatar/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Gravatar 头像服务参数详解 | Inkgraph">
+    <meta name="twitter:description" content="Gravatar：全球通用头像服务的使用方法与参数说明 概述 Gravatar（Globally Recognized Avatar）是全球通用头像服务，通过统一的HTTP接口为用户提供随机生成的头像图像。其核心价值在于：用户只需在支持Gravatar的平台注册并上传头像后，通过关联的邮箱地址即可在任意支持该服务的网站自动显示个性化头像。 核心概念 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>Gravatar 头像服务参数详解</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="gravatar全球通用头像服务的使用方法与参数说明">Gravatar：全球通用头像服务的使用方法与参数说明</h1>
+<h2 id="概述">概述</h2>
+<p>Gravatar（Globally Recognized Avatar）是全球通用头像服务，通过统一的HTTP接口为用户提供随机生成的头像图像。其核心价值在于：用户只需在支持Gravatar的平台注册并上传头像后，通过关联的邮箱地址即可在任意支持该服务的网站自动显示个性化头像。</p>
+<h2 id="核心概念">核心概念</h2>
+<p>Gravatar的本质是一个基于邮箱地址的分布式图像服务，其工作原理包含两个关键环节：</p>
+<ol>
+<li><strong>头像存储</strong>：用户需先在<a href="http://cn.gravatar.com/">Gravatar官网</a>上传并关联邮箱</li>
+<li><strong>动态生成</strong>：通过标准HTTP接口请求时，系统根据参数生成对应图像</li>
+</ol>
+<h2 id="请求参数详解">请求参数详解</h2>
+<p>所有请求必须包含三个核心参数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">http://www.gravatar.com/avatar/{hash}?s={size}&amp;d={default}
+</span></span></span></code></pre></div><table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>说明</th>
+          <th>取值范围</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>hash</td>
+          <td>MD5哈希值</td>
+          <td>32位十六进制字符串</td>
+          <td>确定头像唯一标识，由关联邮箱生成</td>
+      </tr>
+      <tr>
+          <td>s</td>
+          <td>像素尺寸</td>
+          <td>整数（建议100-512）</td>
+          <td>控制输出图像分辨率</td>
+      </tr>
+      <tr>
+          <td>d</td>
+          <td>默认风格</td>
+          <td>identicon/monsterid/wavatar/retro/robohash</td>
+          <td>当未找到自定义头像时使用的生成算法</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>⚠️ 注意：实际使用中hash参数应通过<code>MD5(email.lower().strip())</code>生成，示例中的&quot;11&quot;等数值仅为演示用</p>
+</blockquote>
+<h2 id="使用方法">使用方法</h2>
+<h3 id="基础调用流程">基础调用流程</h3>
+<ol>
+<li><strong>获取hash值</strong>：对目标邮箱执行<code>md5(email.lower().strip())</code>计算</li>
+<li><strong>构造请求URL</strong>：将参数填入标准模板</li>
+<li><strong>处理响应结果</strong>：直接获取PNG格式图像数据</li>
+</ol>
+<h3 id="示例代码">示例代码</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span>email <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;user@example.com&#34;</span>
+</span></span><span style="display:flex;"><span>hash_value <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(email<span style="color:#f92672">.</span>lower()<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;https://www.gravatar.com/avatar/</span><span style="color:#e6db74">{</span>hash_value<span style="color:#e6db74">}</span><span style="color:#e6db74">?s=256&amp;d=identicon&#34;</span>
+</span></span></code></pre></div><h2 id="图像风格对比">图像风格对比</h2>
+<table>
+  <thead>
+      <tr>
+          <th>风格类型</th>
+          <th>特点说明</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>identicon</td>
+          <td>几何图形组成的抽象图案</td>
+          <td>默认推荐风格</td>
+      </tr>
+      <tr>
+          <td>monsterid</td>
+          <td>怪物主题的卡通形象</td>
+          <td>需要趣味性场景</td>
+      </tr>
+      <tr>
+          <td>wavatar</td>
+          <td>人脸轮廓加文字的组合</td>
+          <td>社交平台常用</td>
+      </tr>
+      <tr>
+          <td>retro</td>
+          <td>80年代像素风格</td>
+          <td>怀旧主题网站</td>
+      </tr>
+      <tr>
+          <td>robohash</td>
+          <td>机器人主题的矢量图形</td>
+          <td>科技类应用</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li><strong>隐私边界</strong>：未注册用户会显示默认随机图，避免直接暴露邮箱信息</li>
+<li><strong>尺寸限制</strong>：过大尺寸可能导致加载延迟，建议不超过512x512像素</li>
+<li><strong>兼容性</strong>：部分旧系统可能使用<code>http://</code>协议，但推荐使用HTTPS</li>
+<li><strong>替代方案</strong>：若需完全控制头像，可自行部署<a href="https://gravatars.com/">gravatars.com</a>等兼容服务</li>
+</ol>
+<p>该服务自2007年推出以来，已成为WordPress等主流平台的标准头像协议，其简单易用的接口设计使其在用户身份可视化领域占据重要地位。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>沙箱与Agent框架技术方案对比 | Inkgraph</title>
+    <meta name="description" content="沙箱与智能体框架技术选型指南 概述 在需要执行代码、管理依赖或处理敏感数据的场景中，技术选型需在安全性、性能与易用性之间取得平衡。本文对比了主流沙箱运行时、智能体框架、向量数据库及模型推理工具的技术特性，帮助开发者根据具体需求选择合适方案。 沙箱运行时对比 核心特性差异 方案 隔离级别 启动速度 资源占用 适用场景 boxlite 硬件级 快 极低 需完整 …">
+    <link rel="canonical" href="//localhost:1313/posts/sandbox-and-agent-frameworks/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="沙箱与Agent框架技术方案对比 | Inkgraph">
+    <meta property="og:description" content="沙箱与智能体框架技术选型指南 概述 在需要执行代码、管理依赖或处理敏感数据的场景中，技术选型需在安全性、性能与易用性之间取得平衡。本文对比了主流沙箱运行时、智能体框架、向量数据库及模型推理工具的技术特性，帮助开发者根据具体需求选择合适方案。 沙箱运行时对比 核心特性差异 方案 隔离级别 启动速度 资源占用 适用场景 boxlite 硬件级 快 极低 需完整 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/sandbox-and-agent-frameworks/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="沙箱与Agent框架技术方案对比 | Inkgraph">
+    <meta name="twitter:description" content="沙箱与智能体框架技术选型指南 概述 在需要执行代码、管理依赖或处理敏感数据的场景中，技术选型需在安全性、性能与易用性之间取得平衡。本文对比了主流沙箱运行时、智能体框架、向量数据库及模型推理工具的技术特性，帮助开发者根据具体需求选择合适方案。 沙箱运行时对比 核心特性差异 方案 隔离级别 启动速度 资源占用 适用场景 boxlite 硬件级 快 极低 需完整 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>沙箱与Agent框架技术方案对比</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="沙箱与智能体框架技术选型指南">沙箱与智能体框架技术选型指南</h1>
+<h2 id="概述">概述</h2>
+<p>在需要执行代码、管理依赖或处理敏感数据的场景中，技术选型需在安全性、性能与易用性之间取得平衡。本文对比了主流沙箱运行时、智能体框架、向量数据库及模型推理工具的技术特性，帮助开发者根据具体需求选择合适方案。</p>
+<h2 id="沙箱运行时对比">沙箱运行时对比</h2>
+<h3 id="核心特性差异">核心特性差异</h3>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>隔离级别</th>
+          <th>启动速度</th>
+          <th>资源占用</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>boxlite</td>
+          <td>硬件级</td>
+          <td>快</td>
+          <td>极低</td>
+          <td>需完整Linux环境的嵌入式场景</td>
+      </tr>
+      <tr>
+          <td>firecracker</td>
+          <td>系统级</td>
+          <td>极快</td>
+          <td>低</td>
+          <td>云原生微服务、Serverless</td>
+      </tr>
+      <tr>
+          <td>gvisor</td>
+          <td>用户态</td>
+          <td>中</td>
+          <td>中</td>
+          <td>容器增强安全的混合部署场景</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>技术边界说明</strong>：</p>
+<ul>
+<li>boxlite 通过 OCI 镜像提供完整 Linux 环境，适合需要完整系统调用的场景，但无法直接访问宿主机资源</li>
+<li>firecracker 的 VMM 架构在 AWS Lambda 中实现毫秒级启动，但需要特定硬件支持</li>
+<li>gvisor 通过拦截系统调用实现隔离，但可能遇到 Linux 内核特性兼容性问题</li>
+</ul>
+<h2 id="智能体框架选型">智能体框架选型</h2>
+<h3 id="功能定位差异">功能定位差异</h3>
+<ol>
+<li>
+<p><strong>LangChain</strong>（生态最全）</p>
+<ul>
+<li>优势：提供 200+ 工具集成，支持 LLM agent、memory、prompt 等完整链路</li>
+<li>痛点：抽象层较多导致调试复杂，需处理多层封装的 trace 信息</li>
+</ul>
+</li>
+<li>
+<p><strong>LangGraph</strong>（工作流专家）</p>
+<ul>
+<li>特化：基于 LangChain 扩展，提供状态机管理、条件分支等复杂流程控制</li>
+<li>适用：需要多步骤决策的 RPA 自动化场景</li>
+</ul>
+</li>
+<li>
+<p><strong>CrewAI</strong>（协作入门）</p>
+<ul>
+<li>特点：内置角色定义模板，支持多 Agent 协作的简单工作流</li>
+<li>适用：快速搭建团队协作型智能体</li>
+</ul>
+</li>
+<li>
+<p><strong>AutoGen</strong>（对话专家）</p>
+<ul>
+<li>微软方案：提供 user proxy、assistant、reflection 等角色模板</li>
+<li>适用：需要多角色对话的客服、客服培训等场景</li>
+</ul>
+</li>
+</ol>
+<h2 id="向量数据库选型">向量数据库选型</h2>
+<h3 id="性能与场景适配">性能与场景适配</h3>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>存储规模</th>
+          <th>查询性能</th>
+          <th>开发友好度</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Milvus</td>
+          <td>PB 级</td>
+          <td>高</td>
+          <td>中</td>
+          <td>企业级推荐系统</td>
+      </tr>
+      <tr>
+          <td>Qdrant</td>
+          <td>TB 级</td>
+          <td>高</td>
+          <td>高</td>
+          <td>实时推荐、相似度搜索</td>
+      </tr>
+      <tr>
+          <td>Chroma</td>
+          <td>GB 级</td>
+          <td>中</td>
+          <td>极高</td>
+          <td>本地开发、原型验证</td>
+      </tr>
+      <tr>
+          <td>LlamaIndex</td>
+          <td>中</td>
+          <td>中</td>
+          <td>高</td>
+          <td>RAG 系统搭建</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>技术边界说明</strong>：</p>
+<ul>
+<li>Milvus 需要独立部署，适合大规模生产环境</li>
+<li>Qdrant 的 Rust 实现提供低延迟响应，但需要自行管理分片</li>
+<li>Chroma 的嵌入式设计适合本地开发，但不适合生产环境</li>
+</ul>
+<h2 id="模型推理工具对比">模型推理工具对比</h2>
+<h3 id="推理性能与部署成本">推理性能与部署成本</h3>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>吞吐量</th>
+          <th>硬件要求</th>
+          <th>量化支持</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>vllm</td>
+          <td>极高</td>
+          <td>GPU</td>
+          <td>支持</td>
+          <td>云端大模型服务</td>
+      </tr>
+      <tr>
+          <td>Ollama</td>
+          <td>中</td>
+          <td>CPU/GPU</td>
+          <td>支持</td>
+          <td>本地模型部署</td>
+      </tr>
+      <tr>
+          <td>llama.cpp</td>
+          <td>中</td>
+          <td>CPU</td>
+          <td>强力</td>
+          <td>边缘设备、低功耗场景</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>技术边界说明</strong>：</p>
+<ul>
+<li>vllm 的 PagedAttention 技术显著提升 GPU 利用率，但需要 NVIDIA GPU 支持</li>
+<li>Ollama 提供简单部署方案，但模型加载时间与内存占用较高</li>
+<li>llama.cpp 的 CPU 推理能力突出，适合部署在轻量设备上</li>
+</ul>
+<h2 id="可观测性工具">可观测性工具</h2>
+<h3 id="调试与监控方案">调试与监控方案</h3>
+<ol>
+<li>
+<p><strong>LangSmith</strong>（LangChain 生态）</p>
+<ul>
+<li>特点：集成 trace、日志、指标监控</li>
+<li>限制：非开源，但提供免费额度</li>
+</ul>
+</li>
+<li>
+<p><strong>Phoenix</strong>（开源方案）</p>
+<ul>
+<li>特点：支持 LLM 调用链路追踪，提供可视化界面</li>
+<li>优势：可自托管，适合需要自定义监控的团队</li>
+</ul>
+</li>
+</ol>
+<h2 id="技术选型建议">技术选型建议</h2>
+<ol>
+<li><strong>安全敏感场景</strong>：优先选择 boxlite 或 firecracker 实现代码执行隔离</li>
+<li><strong>复杂工作流</strong>：采用 LangGraph 或 AutoGen 实现多步骤智能体协作</li>
+<li><strong>生产级向量检索</strong>：Milvus 适合 PB 级数据，Qdrant 适合实时场景</li>
+<li><strong>边缘部署</strong>：llama.cpp + Ollama 组合可实现 CPU 推理方案</li>
+<li><strong>调试监控</strong>：LangSmith 适合快速验证，Phoenix 适合长期自建监控体系</li>
+</ol>
+<blockquote>
+<p>注意：所有技术方案的选择需结合具体业务场景，建议通过最小化验证（POC）确认性能边界。</p>
+</blockquote>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

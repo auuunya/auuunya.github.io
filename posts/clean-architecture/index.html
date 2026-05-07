@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>清洁架构四层分层与依赖反转原理 | Inkgraph</title>
+    <meta name="description" content="清洁架构：以业务为核心的分层设计原则 概述 清洁架构（Clean Architecture）是一种以业务逻辑为核心、强调解耦与可维护性的软件架构模式。其核心目标是将业务规则与技术实现（如数据库、UI框架）分离，通过分层结构和依赖反转原则，实现系统的可测试性、可扩展性与长期维护性。 核心概念 清洁架构通过四层分层结构实现业务逻辑与技术细节的解耦，各层从内到外依 …">
+    <link rel="canonical" href="//localhost:1313/posts/clean-architecture/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="清洁架构四层分层与依赖反转原理 | Inkgraph">
+    <meta property="og:description" content="清洁架构：以业务为核心的分层设计原则 概述 清洁架构（Clean Architecture）是一种以业务逻辑为核心、强调解耦与可维护性的软件架构模式。其核心目标是将业务规则与技术实现（如数据库、UI框架）分离，通过分层结构和依赖反转原则，实现系统的可测试性、可扩展性与长期维护性。 核心概念 清洁架构通过四层分层结构实现业务逻辑与技术细节的解耦，各层从内到外依 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/clean-architecture/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="清洁架构四层分层与依赖反转原理 | Inkgraph">
+    <meta name="twitter:description" content="清洁架构：以业务为核心的分层设计原则 概述 清洁架构（Clean Architecture）是一种以业务逻辑为核心、强调解耦与可维护性的软件架构模式。其核心目标是将业务规则与技术实现（如数据库、UI框架）分离，通过分层结构和依赖反转原则，实现系统的可测试性、可扩展性与长期维护性。 核心概念 清洁架构通过四层分层结构实现业务逻辑与技术细节的解耦，各层从内到外依 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>清洁架构四层分层与依赖反转原理</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="清洁架构以业务为核心的分层设计原则">清洁架构：以业务为核心的分层设计原则</h1>
+<h2 id="概述">概述</h2>
+<p>清洁架构（Clean Architecture）是一种以业务逻辑为核心、强调解耦与可维护性的软件架构模式。其核心目标是将业务规则与技术实现（如数据库、UI框架）分离，通过分层结构和依赖反转原则，实现系统的可测试性、可扩展性与长期维护性。</p>
+<h2 id="核心概念">核心概念</h2>
+<p>清洁架构通过四层分层结构实现业务逻辑与技术细节的解耦，各层从内到外依次为：</p>
+<table>
+  <thead>
+      <tr>
+          <th>层级</th>
+          <th>名称</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td><strong>Entities</strong></td>
+          <td>领域模型与业务规则，包含纯粹的业务逻辑，不依赖任何技术实现。</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><strong>Use Cases</strong></td>
+          <td>应用用例/业务流程，调用 Entities 完成任务，定义系统的行为逻辑。</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><strong>Interface Adapters</strong></td>
+          <td>接口适配层，负责数据转换（如 HTTP 请求解析、数据库查询结果映射）。</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><strong>Frameworks &amp; Drivers</strong></td>
+          <td>技术实现层，包含 Web 框架、数据库、UI、第三方库等具体技术细节。</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>依赖方向</strong>：外层（如 Frameworks &amp; Drivers）可以依赖内层（如 Entities），但内层不能依赖外层。通过接口反转（Dependency Inversion）实现解耦，确保技术细节的变化不会影响核心业务逻辑。</p>
+<hr>
+<h2 id="工作原理">工作原理</h2>
+<p>清洁架构的核心在于<strong>依赖反转</strong>与<strong>分层隔离</strong>：</p>
+<ol>
+<li>
+<p><strong>依赖方向</strong>：</p>
+<ul>
+<li>外层（技术实现）通过接口依赖内层（业务逻辑），而非直接引用具体实现。</li>
+<li>例如：HTTP 控制器（Interface Adapters）通过接口调用 Use Cases，而非直接操作数据库（Frameworks &amp; Drivers）。</li>
+</ul>
+</li>
+<li>
+<p><strong>接口连接各层</strong>：</p>
+<ul>
+<li>各层通过定义清晰的接口进行通信，例如：
+<ul>
+<li>Use Cases 提供接口供 Interface Adapters 调用。</li>
+<li>Infrastructure 层（如数据库驱动）实现 Interface Adapters 的接口。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>解耦技术细节</strong>：</p>
+<ul>
+<li>业务逻辑（Entities/Use Cases）独立于具体技术（如数据库类型、Web 框架），便于替换或升级技术栈。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="使用方法">使用方法</h2>
+<h3 id="项目结构示例">项目结构示例</h3>
+<p>典型的 Go 项目结构可能如下：</p>
+<pre tabindex="0"><code>application/
+├── cmd/              # 入口程序（如 main.go）
+├── internal/         # 核心业务逻辑
+│   ├── domain/       # Entities：领域模型和接口（如 model.go）
+│   ├── usecase/      # Use Cases：应用逻辑（如 user.go）
+│   ├── adapter/      # Interface Adapters：HTTP 控制器、gRPC 服务等
+│   │   ├── db/       # 数据库实现（如 MySQL/PostgreSQL）
+│   │   ├── web/      # Web 框架适配（如 Gin、Echo）
+│   ├── layer/        # Infrastructure：技术细节实现
+│   │   ├── controller/ # HTTP 接口适配
+│   │   ├── repository/ # 数据库接口（如 repo/postgres.go）
+├── pkg/              # 工具函数/共用库
+</code></pre><h3 id="目录命名建议">目录命名建议</h3>
+<p>为避免与标准库冲突或提升可读性，建议：</p>
+<ul>
+<li><code>delivery/http</code> → 改为 <code>delivery/web</code> 或 <code>delivery/rest</code>（避免与 <code>net/http</code> 冲突）。</li>
+<li><code>repository</code> → 可细化为 <code>repo/postgres</code> 或 <code>repo/mysql</code>（明确技术实现）。</li>
+</ul>
+<hr>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>
+<p><strong>依赖方向严格遵循</strong>：</p>
+<ul>
+<li>内层（Entities/Use Cases）不能依赖外层（Frameworks &amp; Drivers）。</li>
+<li>例如：Use Cases 中不应直接调用 <code>gorm</code> 或 <code>sql.DB</code>，而应通过接口定义数据库操作。</li>
+</ul>
+</li>
+<li>
+<p><strong>测试友好性</strong>：</p>
+<ul>
+<li>通过接口解耦，可轻松用 Mock 对象替换真实依赖（如用内存数据库替代 MySQL），提升单元测试效率。</li>
+</ul>
+</li>
+<li>
+<p><strong>技术栈灵活性</strong>：</p>
+<ul>
+<li>业务逻辑层独立于具体技术，可灵活切换框架（如从 Gin 切换到 FastHTTP）或数据库（如从 PostgreSQL 切换到 MongoDB）。</li>
+</ul>
+</li>
+<li>
+<p><strong>目录结构清晰化</strong>：</p>
+<ul>
+<li>避免 <code>entity/domain</code> 与 <code>usecase</code> 混淆，保持 <code>entity</code> 与 <code>domain</code> 一致（若领域模型与实体分离）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="总结">总结</h2>
+<p>清洁架构通过分层与依赖反转，将业务逻辑与技术细节解耦，显著提升系统的可维护性与可测试性。其核心价值在于：<strong>业务规则应独立于技术实现，技术细节的变化不应影响核心逻辑</strong>。在实际开发中，需严格遵循依赖方向，合理设计接口，并通过清晰的目录结构降低耦合度。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

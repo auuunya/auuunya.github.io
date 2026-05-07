@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Ollama 服务重启与日志配置方法 | Inkgraph</title>
+    <meta name="description" content="Ollama 服务管理与日志配置指南（macOS 环境） 概述 本文聚焦于 Ollama 在 macOS 环境下的服务管理实践，涵盖服务重启、日志定位及配置文件路径等核心操作。适用于通过 Homebrew 安装的 Ollama 用户，提供基础运维操作指引。 服务重启操作 通过 Homebrew 的服务管理功能可实现 Ollama 服务的快速重启： brew …">
+    <link rel="canonical" href="//localhost:1313/posts/ollama-restart-log-config/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="Ollama 服务重启与日志配置方法 | Inkgraph">
+    <meta property="og:description" content="Ollama 服务管理与日志配置指南（macOS 环境） 概述 本文聚焦于 Ollama 在 macOS 环境下的服务管理实践，涵盖服务重启、日志定位及配置文件路径等核心操作。适用于通过 Homebrew 安装的 Ollama 用户，提供基础运维操作指引。 服务重启操作 通过 Homebrew 的服务管理功能可实现 Ollama 服务的快速重启： brew …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/ollama-restart-log-config/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Ollama 服务重启与日志配置方法 | Inkgraph">
+    <meta name="twitter:description" content="Ollama 服务管理与日志配置指南（macOS 环境） 概述 本文聚焦于 Ollama 在 macOS 环境下的服务管理实践，涵盖服务重启、日志定位及配置文件路径等核心操作。适用于通过 Homebrew 安装的 Ollama 用户，提供基础运维操作指引。 服务重启操作 通过 Homebrew 的服务管理功能可实现 Ollama 服务的快速重启： brew …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>Ollama 服务重启与日志配置方法</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="ollama-服务管理与日志配置指南macos-环境">Ollama 服务管理与日志配置指南（macOS 环境）</h1>
+<h2 id="概述">概述</h2>
+<p>本文聚焦于 Ollama 在 macOS 环境下的服务管理实践，涵盖服务重启、日志定位及配置文件路径等核心操作。适用于通过 Homebrew 安装的 Ollama 用户，提供基础运维操作指引。</p>
+<h2 id="服务重启操作">服务重启操作</h2>
+<p>通过 Homebrew 的服务管理功能可实现 Ollama 服务的快速重启：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew services restart ollama
+</span></span></code></pre></div><p>该命令会重新加载 Ollama 的服务配置并重启进程。若服务未正常运行，可结合系统日志排查启动失败原因。</p>
+<h2 id="日志文件管理">日志文件管理</h2>
+<p>Ollama 的运行日志默认存储在以下路径：</p>
+<pre tabindex="0"><code>/opt/homebrew/var/log/ollama.log
+</code></pre><p>该日志文件记录了服务启动、运行状态及错误信息。若需分析具体问题，可使用 <code>tail</code> 或 <code>cat</code> 命令查看日志内容。注意：日志路径依赖 Homebrew 的安装目录结构，若使用非默认安装路径，需根据实际配置调整。</p>
+<h2 id="配置文件路径">配置文件路径</h2>
+<p>Ollama 的配置文件通常位于：</p>
+<pre tabindex="0"><code>/opt/homebrew/opt/ollama/ollama.xxx.xxx.plist
+</code></pre><p>该文件以 <code>.plist</code> 格式存储，定义了服务的启动参数和运行时配置。修改配置后需重新加载服务使变更生效。若需备份或迁移配置，建议直接复制该文件并核对版本号（xxx.xxx）与当前安装版本的匹配性。</p>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>
+<p><strong>路径依赖性</strong><br>
+上述路径基于 Homebrew 默认安装目录（<code>/opt/homebrew</code>）设计。若用户自定义了 Homebrew 安装路径（如 <code>/usr/local</code>），需将路径中的 <code>/opt/homebrew</code> 替换为实际安装目录。</p>
+</li>
+<li>
+<p><strong>权限问题</strong><br>
+若遇到无法访问日志或配置文件的情况，可能与 macOS 权限设置相关。可参考 <a href="#macos-permissions">macos-permissions</a> 主题中提到的 <code>tccutil reset</code> 命令重置权限，或检查文件权限是否包含当前用户读写权限。</p>
+</li>
+<li>
+<p><strong>配置修改规范</strong><br>
+直接修改 <code>.plist</code> 文件前，建议通过 <code>brew services edit ollama</code> 命令查看官方推荐的配置项，避免因格式错误导致服务异常。</p>
+</li>
+</ol>
+<h2 id="相关主题">相关主题</h2>
+<p>若遇到权限残留或配置冲突问题，可进一步参考 <a href="#macos-permissions">macos-permissions</a> 主题中关于权限重置与残留文件清理的说明。</p>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>

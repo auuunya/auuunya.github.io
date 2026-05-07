@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>PyInstaller 使用指南 | Inkgraph</title>
+    <meta name="description" content="使用 PyInstaller 打包 Python 程序为独立可执行文件 概述 PyInstaller 是一个将 Python 程序打包为独立可执行文件的工具，支持跨平台生成 .exe（Windows）、.app（macOS）等格式。其核心功能是将 Python 脚本、依赖库、资源文件等整合到单个文件或目录中，使目标系统无需安装 Python 环境即可运行程序 …">
+    <link rel="canonical" href="//localhost:1313/posts/pyinstaller/">
+    
+    <meta property="og:site_name" content="Inkgraph">
+    <meta property="og:title" content="PyInstaller 使用指南 | Inkgraph">
+    <meta property="og:description" content="使用 PyInstaller 打包 Python 程序为独立可执行文件 概述 PyInstaller 是一个将 Python 程序打包为独立可执行文件的工具，支持跨平台生成 .exe（Windows）、.app（macOS）等格式。其核心功能是将 Python 脚本、依赖库、资源文件等整合到单个文件或目录中，使目标系统无需安装 Python 环境即可运行程序 …">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="//localhost:1313/posts/pyinstaller/">
+    
+    
+      
+        <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+      
+      
+        <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+      
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PyInstaller 使用指南 | Inkgraph">
+    <meta name="twitter:description" content="使用 PyInstaller 打包 Python 程序为独立可执行文件 概述 PyInstaller 是一个将 Python 程序打包为独立可执行文件的工具，支持跨平台生成 .exe（Windows）、.app（macOS）等格式。其核心功能是将 Python 脚本、依赖库、资源文件等整合到单个文件或目录中，使目标系统无需安装 Python 环境即可运行程序 …">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/site.css">
+    
+    
+  </head>
+  <body
+    class="page-posts"
+    data-site-root="/"
+  >
+    <div class="wiki-shell">
+      <aside class="wiki-rail">
+        <div class="wiki-brand">
+          <a href="/">AuuuNya</a>
+          <p>WIKI BRAIN</p>
+        </div>
+        <nav class="wiki-rail-nav" aria-label="Primary">
+          
+            
+            
+              
+            
+            <a class="" href="/">Home</a>
+          
+            
+            
+              
+            
+            <a class="is-active" href="/posts" aria-current="page">Posts</a>
+          
+            
+            
+              
+            
+            <a class="" href="/graph">Graph</a>
+          
+        </nav>
+        <div class="wiki-rail-footer">
+          
+          <p>© AuuuNya</p>
+          
+          
+          
+            <p class="wiki-rail-footer-links">
+              
+                <a href="https://github.com/auuunya/inkgraph">github.com/auuunya/inkgraph</a>
+              
+              
+            </p>
+          
+        </div>
+      </aside>
+
+      <main class="wiki-main">
+        
+  <article class="doc-panel">
+    <header class="doc-header">
+      <p class="doc-eyebrow">Post</p>
+      <h1>PyInstaller 使用指南</h1>
+      <div class="doc-meta">
+        
+          <span>2026-05-07</span>
+        
+      </div>
+    </header>
+
+    <div class="doc-copy">
+      <h1 id="使用-pyinstaller-打包-python-程序为独立可执行文件">使用 PyInstaller 打包 Python 程序为独立可执行文件</h1>
+<h2 id="概述">概述</h2>
+<p>PyInstaller 是一个将 Python 程序打包为独立可执行文件的工具，支持跨平台生成 <code>.exe</code>（Windows）、<code>.app</code>（macOS）等格式。其核心功能是将 Python 脚本、依赖库、资源文件等整合到单个文件或目录中，使目标系统无需安装 Python 环境即可运行程序。</p>
+<h2 id="安装与基础用法">安装与基础用法</h2>
+<h3 id="安装-pyinstaller">安装 PyInstaller</h3>
+<p>通过 pip 安装 PyInstaller：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pyinstaller
+</span></span></code></pre></div><h3 id="基础打包命令">基础打包命令</h3>
+<p>默认情况下，PyInstaller 会将程序和依赖拆分为多个文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller your_script.py
+</span></span></code></pre></div><p>生成的可执行文件位于 <code>dist/</code> 目录，打包过程中生成的临时文件存放在 <code>build/</code> 目录，<code>.spec</code> 配置文件用于后续自定义打包。</p>
+<h2 id="常用命令选项">常用命令选项</h2>
+<h3 id="1---onefile生成单个可执行文件">1. <code>--onefile</code>：生成单个可执行文件</h3>
+<p>将所有内容打包为一个文件，便于分发：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile your_script.py
+</span></span></code></pre></div><h3 id="2---windowed----noconsole隐藏控制台窗口">2. <code>--windowed</code> / <code>--noconsole</code>：隐藏控制台窗口</h3>
+<p>适用于 GUI 程序（如 <code>tkinter</code>、<code>PyQt</code> 应用），避免弹出命令行窗口：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile --windowed your_script.py
+</span></span></code></pre></div><h3 id="3---add-data添加外部数据文件">3. <code>--add-data</code>：添加外部数据文件</h3>
+<ul>
+<li><strong>Windows</strong>：用分号 <code>;</code> 分隔源路径和目标路径</li>
+<li><strong>Linux/macOS</strong>：用冒号 <code>:</code> 分隔源路径和目标路径</li>
+</ul>
+<p>示例：添加配置文件和图片目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --add-data <span style="color:#e6db74">&#34;config.json;.&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --add-data <span style="color:#e6db74">&#34;images:images&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  your_script.py
+</span></span></code></pre></div><h3 id="4---hidden-import显式指定未被自动检测的模块">4. <code>--hidden-import</code>：显式指定未被自动检测的模块</h3>
+<p>用于解决动态导入模块未被包含的问题：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --hidden-import<span style="color:#f92672">=</span>module1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --hidden-import<span style="color:#f92672">=</span>module2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  your_script.py
+</span></span></code></pre></div><h3 id="5---add-binary添加非-python-二进制文件">5. <code>--add-binary</code>：添加非 Python 二进制文件</h3>
+<p>如 <code>.so</code>（Linux）、<code>.dll</code>（Windows）等：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --add-binary <span style="color:#e6db74">&#34;/path/to/libexample.so:.&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  your_script.py
+</span></span></code></pre></div><h3 id="6---icon设置可执行文件图标">6. <code>--icon</code>：设置可执行文件图标</h3>
+<p>需提供 <code>.ico</code>（Windows）或 <code>.icns</code>（macOS）格式的图标文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile --icon<span style="color:#f92672">=</span>my_icon.ico your_script.py
+</span></span></code></pre></div><h3 id="7---clean清理缓存">7. <code>--clean</code>：清理缓存</h3>
+<p>清除旧的构建文件，避免版本残留问题：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --clean your_script.py
+</span></span></code></pre></div><h3 id="8---striplinux-专属去除调试符号">8. <code>--strip</code>（Linux 专属）：去除调试符号</h3>
+<p>减小文件体积，但可能影响调试：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile --strip your_script.py
+</span></span></code></pre></div><h2 id="使用-spec-文件精细配置">使用 <code>.spec</code> 文件精细配置</h2>
+<h3 id="生成-spec-文件">生成 <code>.spec</code> 文件</h3>
+<p>首次运行 PyInstaller 会自动生成配置文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller your_script.py
+</span></span></code></pre></div><h3 id="修改-spec-文件">修改 <code>.spec</code> 文件</h3>
+<p>编辑 <code>your_script.spec</code> 文件，调整以下关键参数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Analysis(
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#39;your_script.py&#39;</span>],
+</span></span><span style="display:flex;"><span>    pathex<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;/path/to/script&#39;</span>],
+</span></span><span style="display:flex;"><span>    binaries<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#39;/path/to/libexample.so&#39;</span>, <span style="color:#e6db74">&#39;.&#39;</span>)],  <span style="color:#75715e"># 添加二进制文件</span>
+</span></span><span style="display:flex;"><span>    datas<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#39;config.json&#39;</span>, <span style="color:#e6db74">&#39;.&#39;</span>)],                 <span style="color:#75715e"># 添加数据文件</span>
+</span></span><span style="display:flex;"><span>    hiddenimports<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;module1&#39;</span>, <span style="color:#e6db74">&#39;module2&#39;</span>]          <span style="color:#75715e"># 添加隐藏导入</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><h3 id="重新打包">重新打包</h3>
+<p>修改后通过 <code>.spec</code> 文件重新生成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller your_script.spec
+</span></span></code></pre></div><h2 id="示例完整打包命令">示例：完整打包命令</h2>
+<p>以下命令整合了多种选项：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pyinstaller --onefile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --icon<span style="color:#f92672">=</span>my_icon.ico <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --add-data <span style="color:#e6db74">&#34;config.json;.&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --add-data <span style="color:#e6db74">&#34;images:images&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --hidden-import<span style="color:#f92672">=</span>module1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --hidden-import<span style="color:#f92672">=</span>module2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  your_script.py
+</span></span></code></pre></div><h2 id="常见问题与注意事项">常见问题与注意事项</h2>
+<ol>
+<li>
+<p><strong>依赖缺失</strong></p>
+<ul>
+<li>现象：运行时报错 <code>ModuleNotFoundError</code></li>
+<li>解决：使用 <code>--hidden-import</code> 显式添加缺失模块</li>
+</ul>
+</li>
+<li>
+<p><strong>数据文件未包含</strong></p>
+<ul>
+<li>现象：程序无法读取配置文件或资源</li>
+<li>解决：检查 <code>--add-data</code> 的路径分隔符是否符合平台规范（<code>;</code> 或 <code>:</code>）</li>
+</ul>
+</li>
+<li>
+<p><strong>打包错误信息分析</strong></p>
+<ul>
+<li>PyInstaller 会输出详细日志，注意检查路径权限、文件是否存在等问题</li>
+</ul>
+</li>
+<li>
+<p><strong>可执行文件体积过大</strong></p>
+<ul>
+<li>建议：使用 <code>--strip</code>（Linux）或 <code>--onefile</code> 压缩内容</li>
+</ul>
+</li>
+<li>
+<p><strong>GUI 程序显示控制台窗口</strong></p>
+<ul>
+<li>现象：PyQt/tkinter 程序弹出命令行窗口</li>
+<li>解决：确保使用 <code>--windowed</code> 或 <code>--noconsole</code> 参数</li>
+</ul>
+</li>
+<li>
+<p><strong>路径问题</strong></p>
+<ul>
+<li>打包后的程序中，数据文件路径需以 <code>sys._MEIPASS</code> 为根目录访问（需在代码中处理）</li>
+</ul>
+</li>
+</ol>
+<h2 id="打包后目录结构示例">打包后目录结构示例</h2>
+<p>假设脚本为 <code>your_script.py</code>，且添加了配置文件和图片目录：</p>
+<pre tabindex="0"><code>your_project/
+├── your_script.py
+├── config.json
+├── images/
+│   ├── image1.png
+│   └── image2.png
+├── build/              # 构建临时文件
+├── dist/               # 最终生成的可执行文件
+│   └── your_script.exe # Windows 示例
+├── your_script.spec    # 配置文件
+└── PyInstaller-hooks/  # 自动生成的依赖分析文件
+</code></pre><blockquote>
+<p><strong>注意</strong>：若使用 <code>--onefile</code>，所有内容会被打包到 <code>your_script.exe</code> 中，<code>dist/</code> 目录下仅包含该文件。</p>
+</blockquote>
+
+    </div>
+  </article>
+
+      </main>
+    </div>
+    
+    
+  </body>
+</html>
